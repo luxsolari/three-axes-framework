@@ -103,20 +103,6 @@ You can explicitly shift AI behavior mid-conversation:
 | "Walk me through this" | **Growth** | AI teaches thoroughly, explains tradeoffs |
 | "What are the tradeoffs?" | **Design** | AI presents alternatives, no default recommendation |
 
-## Research basis
-
-- Shen, J.H. & Tamkin, A. (2026). *How AI Impacts Skill Formation.* Anthropic Research. [arXiv:2601.20245](https://arxiv.org/abs/2601.20245)
-- Osmani, A. (2026). *Comprehension Debt.* [addyosmani.com](https://addyosmani.com/blog/comprehension-debt/)
-- Storey, M.A. (2026). *Cognitive Debt.* [margaretstorey.com](https://margaretstorey.com/blog/2026/02/09/cognitive-debt/)
-
-## License
-
-MIT — free to use, fork, and adapt.
-
-## Author
-
-**Lux Solari** — [luxsolari@outlook.com](mailto:luxsolari@outlook.com)
-
 ## Three-tier profile system
 
 The framework operates across three tiers. Each tier has narrower scope and higher priority:
@@ -215,3 +201,17 @@ All three files share the same optional-key shape:
 ### Project profiles
 
 `.three-axes.json` is committable by default — useful for sharing team defaults. Add it to `.gitignore` if you want per-developer settings only.
+
+## Research basis
+
+- Shen, J.H. & Tamkin, A. (2026). *How AI Impacts Skill Formation.* Anthropic Research. [arXiv:2601.20245](https://arxiv.org/abs/2601.20245)
+- Osmani, A. (2026). *Comprehension Debt.* [addyosmani.com](https://addyosmani.com/blog/comprehension-debt/)
+- Storey, M.A. (2026). *Cognitive Debt.* [margaretstorey.com](https://margaretstorey.com/blog/2026/02/09/cognitive-debt/)
+
+## License
+
+MIT — free to use, fork, and adapt.
+
+## Author
+
+**Lux Solari** — [luxsolari@outlook.com](mailto:luxsolari@outlook.com)
