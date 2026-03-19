@@ -30,6 +30,41 @@ The Three Axes Framework currently injects a static behavioral ruleset at sessio
 
 ---
 
+## Interaction Model — Full Layering
+
+The framework operates across three distinct tiers. Each tier has narrower scope and higher priority than the one below it:
+
+```
+Tier 1 — Persistent Profile (baseline, cross-session)
+  ~/.claude/three-axes-profile.json   global default
+  .three-axes.json                    project override (repo root)
+
+  ↓ overridden by
+
+Tier 2 — Session Commands (ephemeral, current session only)
+  ~/.claude/three-axes-session.json   written by /three-axes mode and /three-axes set
+  Cleared on startup, preserved across compact/resume
+
+  ↓ overridden by
+
+Tier 3 — Conversational Mode-Switch Signals (instant, current task only)
+  Natural language phrases that shift AI behavior mid-conversation
+  No file written. No persistence. Reverts when the task context changes.
+```
+
+**Tier 3 signals (from v1.0.0, preserved):**
+
+| Say | Mode | Effect |
+|---|---|---|
+| "Let me try this" / "I want to take a crack at it" | **Mentor** | AI steps aside, reviews and debugs on request |
+| "Just do it" / "Ship it" / "Handle the boilerplate" | **Output** | AI is efficient, minimal ceremony |
+| "Walk me through this" / "Why this approach?" | **Growth** | AI teaches thoroughly, explains tradeoffs |
+| "What are the tradeoffs?" | **Design** | AI presents alternatives, no default recommendation |
+
+**Key distinction:** Commands (Tier 2) change what the session *is*. Signals (Tier 3) change what *this task* needs. A session configured as `production` mode can still be interrupted with "walk me through this" for one task, then resume production behavior naturally.
+
+---
+
 ## Architecture
 
 ### Profile Cascade
@@ -162,9 +197,9 @@ Multiple axes can be set in one command. A scope flag applies to all axes in the
 | File | Change |
 |---|---|
 | `.claude-plugin/plugin.json` | Version bump `1.0.0 → 1.1.0` |
-| `README.md` | Add "Commands" section (all four commands with examples) and "Profile Configuration" section (cascade diagram, file locations, schema) |
+| `README.md` | Add "How it works" section documenting the full three-tier interaction model (persistent profile → session commands → conversational signals), "Commands" section (all four commands with examples), and "Profile Configuration" section (cascade diagram, file locations, schema) |
 | `hooks/inject-framework.mjs` | Extend with profile cascade reading, first-run detection, and session file wiping on `startup` |
-| `skills/three-axes-framework/SKILL.md` | Document that axis values can be explicitly set via commands; link to command reference |
+| `skills/three-axes-framework/SKILL.md` | Add a "Interaction Model" section documenting all three tiers and their relationship; document that axis values can be set via commands and that conversational signals override them instantly without writing files |
 
 ### New runtime files (not in repo)
 
