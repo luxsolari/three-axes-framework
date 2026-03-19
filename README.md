@@ -35,18 +35,51 @@ Or from inside Claude Code:
 /plugin install three-axes-framework@lux-solari-plugins
 ```
 
-### Direct GitHub install (no marketplace)
-
-```bash
-claude plugins install three-axes-framework@github:luxsolari/three-axes-framework
-```
-
 ### Local development / testing
 
 ```bash
 git clone https://github.com/luxsolari/three-axes-framework
 claude plugin validate ./three-axes-framework
 ```
+
+## Troubleshooting
+
+### Installation fails with `Permission denied (publickey)`
+
+Claude Code's plugin installer uses SSH (`git@github.com:`) by default. If you don't have GitHub SSH keys configured — common on WSL, Docker, CI, or fresh machines — the install will fail even though this is a public repository.
+
+**Known issue:** As of Claude Code v2.1.80, the TUI Discover screen and `claude plugin install` command both still use the SSH path, regardless of whether SSH is configured. This is tracked at [anthropics/claude-code#18001](https://github.com/anthropics/claude-code/issues/18001).
+
+**Fix — generate and configure SSH keys for GitHub:**
+
+```bash
+# 1. Generate a new SSH key (accept defaults, optionally add a passphrase)
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+# 2. Print the public key
+cat ~/.ssh/id_ed25519.pub
+```
+
+Copy the output and add it to GitHub: **Settings → SSH and GPG keys → New SSH key**.
+
+```bash
+# 3. Verify the connection
+ssh -T git@github.com
+# Expected: "Hi <username>! You've successfully authenticated..."
+```
+
+Then retry the plugin installation.
+
+**Quick workaround (no GitHub account needed) — tell git to use HTTPS instead:**
+
+```bash
+git config --global url."https://github.com/".insteadOf "git@github.com:"
+```
+
+This redirects all SSH clone attempts to HTTPS. Useful for WSL, Docker, or CI environments where setting up SSH keys isn't practical.
+
+
+---
 
 ## Quickstart
 
