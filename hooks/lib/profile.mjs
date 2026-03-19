@@ -33,7 +33,6 @@ export function projectProfilePath() {
 }
 
 export function readProfile(filePath) {
-  if (!existsSync(filePath)) return {};
   try {
     return JSON.parse(readFileSync(filePath, 'utf8'));
   } catch {
