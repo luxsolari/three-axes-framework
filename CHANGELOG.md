@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-03-19
+
+### Added
+- `/three-axes-framework` bare invocation as an alias for `/three-axes` — handles users invoking by plugin name
+
 ## [1.1.2] - 2026-03-19
 
 ### Added
