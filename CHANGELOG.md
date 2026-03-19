@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-03-19
+
+### Fixed
+- `/three-axes setup` now explicitly invokes the `AskUserQuestion` tool with pre-selected options, ensuring consistent interactive UI across all environments
+- Removed unreachable first-run auto-prompt from SessionStart hook — Claude cannot initiate conversation, so setup must be run manually after installation
+- Post-setup summary now always shows all six framework principles with per-profile descriptions, and documents all three adjustment tiers (presets, granular set, conversational signals)
+
+### Added
+- Quickstart section to README
+- Context window cost note in README (≈2,400 tokens, one-time per session)
+
+### Changed
+- README `/three-axes setup` description updated to reflect manual first-run requirement
+
 ## [1.1.0] - 2026-03-19
 
 ### Added
