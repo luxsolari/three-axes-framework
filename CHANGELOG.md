@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Three-tier interaction model: persistent profile → session commands → conversational signals
 - Profile cascade: global (`~/.claude/three-axes-profile.json`), project (`.three-axes.json`), session (`~/.claude/three-axes-session.json`)
-- First-run detection: auto-triggers `/three-axes setup` when no profile exists
+- First-run detection: prompts user to run `/three-axes setup` when no profile exists
 - `/three-axes setup` command — interactive axis configuration
 - `/three-axes status` command — shows resolved profile with source labels
 - `/three-axes mode <preset>` command — named presets (learning, output, production, explore, balanced)
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Profile utility module (`hooks/lib/profile.mjs`) with unit tests
 - `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`
 
-## [1.0.0] - 2026-03-19
+## [1.0.0] - 2026-03-18
 
 ### Added
 - Initial release: SessionStart hook with silent framework injection

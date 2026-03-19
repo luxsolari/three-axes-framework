@@ -116,7 +116,7 @@ Tier 3 — Conversational Signals      natural language, no files written, task-
 ## Commands
 
 ### `/three-axes setup`
-Interactive first-run setup. Asks about each axis and writes your profile to `~/.claude/three-axes-profile.json`. Also triggered automatically on first session if no profile exists.
+Interactive first-run setup. Asks about each axis and writes your profile to `~/.claude/three-axes-profile.json`. On your first session with no profile, the framework will prompt you to run this command.
 
 ### `/three-axes status`
 Shows the resolved profile for the current session, with source label for each axis (`global`, `project`, `session`, or `default`).

@@ -14,17 +14,24 @@ Open an issue at [github.com/luxsolari/three-axes-framework/issues](https://gith
 
 ## Testing locally
 
-Install the plugin from your local clone:
+Clone the repository and validate the plugin structure:
+
+```bash
+git clone https://github.com/luxsolari/three-axes-framework
+claude plugin validate ./three-axes-framework
+```
+
+To install from your local clone (if you have the local marketplace configured):
 
 ```
-/plugin marketplace add ./path/to/three-axes-framework
 /plugin install three-axes-framework@local
 ```
 
-Or if you have the local marketplace configured:
+Or install directly from the remote marketplace:
 
 ```
-/plugin install three-axes-framework@local
+/plugin marketplace add lux-solari-plugins
+/plugin install three-axes-framework@lux-solari-plugins
 ```
 
 ## Commit conventions
