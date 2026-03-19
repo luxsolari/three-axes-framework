@@ -57,8 +57,9 @@ const axisLines = Object.entries(values)
 const axisContext = `## Active Profile\n\n${axisLines}`;
 
 // --- First-run prompt ---
+// Phrased as an instruction TO Claude (not to the user) so Claude proactively surfaces it.
 const firstRunPrompt = isFirstRun(globalPath, projectPath)
-  ? `\n\n## First Run\n\nNo Three Axes profile found. Please start this session by running \`/three-axes setup\` to configure your profile. Until then, defaults apply (mastery: medium, consequence: medium, intent: balanced).`
+  ? `\n\n## IMPORTANT: First-Run Action Required\n\nNo Three Axes Framework profile has been configured yet. Your first response in this session MUST begin with this message to the user before addressing anything else:\n\n"Welcome! The Three Axes Framework is active but hasn't been configured yet. Run \`/three-axes setup\` to set your AI behavior preferences — it only takes a minute. Until then, defaults apply (mastery: medium, consequence: medium, intent: balanced)."\n\nAfter delivering this message, proceed normally.`
   : '';
 
 // --- Output ---
