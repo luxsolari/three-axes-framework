@@ -1,6 +1,6 @@
 {
   "name": "three-axes-framework",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Governs how AI assists developers by calibrating behavior across three axes — Mastery, Consequence, and Intent — to prevent comprehension debt while maximizing productivity.",
   "author": {
     "name": "Lux Solari",
@@ -15,5 +15,6 @@
     "developer-philosophy",
     "learning",
     "code-quality"
-  ]
+  ],
+  "commands": ["./commands/"]
 }
