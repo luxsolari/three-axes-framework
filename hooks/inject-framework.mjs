@@ -25,6 +25,7 @@ try {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const input = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  // session_event is the primary field; trigger/event are aliases for forward-compat with hook API variations
   sessionEvent = input.session_event ?? input.trigger ?? input.event ?? 'startup';
 } catch { /* default to startup — safe: wipes session, never skips injection */ }
 
