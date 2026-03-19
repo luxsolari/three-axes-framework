@@ -54,14 +54,22 @@ Tier 3 — Conversational Mode-Switch Signals (instant, current task only)
 
 **Tier 3 signals (from v1.0.0, preserved):**
 
-| Say | Mode | Effect |
-|---|---|---|
-| "Let me try this" / "I want to take a crack at it" | **Mentor** | AI steps aside, reviews and debugs on request |
-| "Just do it" / "Ship it" / "Handle the boilerplate" | **Output** | AI is efficient, minimal ceremony |
-| "Walk me through this" / "Why this approach?" | **Growth** | AI teaches thoroughly, explains tradeoffs |
-| "What are the tradeoffs?" | **Design** | AI presents alternatives, no default recommendation |
+| Say | Mode | Axis override | Duration |
+|---|---|---|---|
+| "Let me try this" / "I want to take a crack at it" | **Mentor** | `mastery=low, intent=growth` | Attempt-bounded — stays active until user finishes their attempt or requests review |
+| "Just do it" / "Ship it" / "Handle the boilerplate" | **Output** | `mastery=high, intent=output` | Single-task — expires when the requested task is complete |
+| "Walk me through this" / "Why this approach?" | **Growth** | `intent=growth` | Topic-bounded — stays active until the topic or explanation concludes |
+| "What are the tradeoffs?" | **Design** | `intent=balanced` + present-alternatives flag | Single-response — expires after AI presents the alternatives |
 
-**Key distinction:** Commands (Tier 2) change what the session *is*. Signals (Tier 3) change what *this task* needs. A session configured as `production` mode can still be interrupted with "walk me through this" for one task, then resume production behavior naturally.
+**Axis override semantics:** Tier-3 signals temporarily replace specific axis values in-context only. Unspecified axes (marked —) inherit from the active tier-1/tier-2 profile. No file is written.
+
+**Reversion:** Axis values revert to the tier-2 session profile (or tier-1 if no session override exists) when the signal's duration expires naturally. The user does not need to explicitly cancel.
+
+**Acknowledgment mechanic (Mentor and Growth only):** When activating an attempt-bounded or topic-bounded signal, AI briefly acknowledges the mode shift so the user knows the context has changed (e.g., "I'll step aside — give it a try and let me know when you want a review"). This surfaces the mode change without requiring the user to manage it.
+
+**Design mode note:** The present-alternatives flag is a behavioral modifier that cannot be expressed in axis values alone. It instructs AI to enumerate options without defaulting to a recommendation, regardless of the active mastery/consequence profile.
+
+**Key distinction:** Commands (Tier 2) change what the session *is*. Signals (Tier 3) change what *this task* needs — transiently, without persisting to any file.
 
 ---
 
@@ -199,7 +207,7 @@ Multiple axes can be set in one command. A scope flag applies to all axes in the
 | `.claude-plugin/plugin.json` | Version bump `1.0.0 → 1.1.0` |
 | `README.md` | Add "How it works" section documenting the full three-tier interaction model (persistent profile → session commands → conversational signals), "Commands" section (all four commands with examples), and "Profile Configuration" section (cascade diagram, file locations, schema) |
 | `hooks/inject-framework.mjs` | Extend with profile cascade reading, first-run detection, and session file wiping on `startup` |
-| `skills/three-axes-framework/SKILL.md` | Add a "Interaction Model" section documenting all three tiers and their relationship; document that axis values can be set via commands and that conversational signals override them instantly without writing files |
+| `skills/three-axes-framework/SKILL.md` | Add an "Interaction Model" section documenting all three tiers and their relationship; document that commands set persistent/session axis values, and that conversational signals temporarily override specific axis values in-context (no file written) with duration rules: single-task (Output), single-response (Design), attempt-bounded with acknowledgment (Mentor), topic-bounded with acknowledgment (Growth) |
 
 ### New runtime files (not in repo)
 
