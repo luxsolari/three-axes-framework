@@ -31,6 +31,7 @@ try {
 const body = skillContent.replace(/^---[\s\S]*?---\n/, '').trim();
 
 const output = {
+  suppressOutput: true,
   systemMessage: `Three Axes Framework — active for this session:\n\n${body}`
 };
 
