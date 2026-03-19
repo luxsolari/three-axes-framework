@@ -48,6 +48,34 @@ git clone https://github.com/luxsolari/three-axes-framework
 claude plugin validate ./three-axes-framework
 ```
 
+## Quickstart
+
+```bash
+# 1. Install
+claude plugins marketplace add luxsolari/lux-solari-plugins
+claude plugins install three-axes-framework@lux-solari-plugins
+
+# 2. Configure your profile (run once)
+/three-axes setup
+
+# 3. Check what's active at any time
+/three-axes status
+```
+
+That's it. The framework runs automatically from this point on — no further setup needed.
+
+**Need a quick mode change?** Use presets for the current session:
+
+```bash
+/three-axes mode learning     # exploring something new
+/three-axes mode production   # high-stakes work
+/three-axes mode output       # just ship it
+```
+
+Or tell Claude directly: *"Walk me through this"*, *"Let me try this"*, *"Just do it"*.
+
+---
+
 ## How it works
 
 Once installed, the framework is **truly always active** via a `SessionStart` hook that fires on every session startup, resume, clear, and compact event. The hook injects the full framework into Claude's context before any conversation begins — no slash command, no keyword trigger, no manual invocation needed.
