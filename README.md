@@ -82,6 +82,8 @@ Once installed, the framework is **truly always active** via a `SessionStart` ho
 
 A companion skill also loads contextually whenever conversations involve coding, architecture, debugging, or design — providing a second activation path as a fallback.
 
+> **Context window cost:** The hook injects approximately **~2,400 tokens** per session (the framework rules + your active profile). This is a one-time cost paid at session start — it does not grow during the conversation. On a 200k-token context window that's about 1.2% overhead.
+
 The framework operates as a background behavioral ruleset that shapes every development conversation:
 
 - AI presents plans before implementing non-trivial changes
