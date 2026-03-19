@@ -16,5 +16,6 @@
     "learning",
     "code-quality"
   ],
+  "skills": "./skills/",
   "commands": ["./commands/"]
 }
