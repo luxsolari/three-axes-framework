@@ -1,0 +1,17 @@
+{
+  "description": "Injects the Three Axes Framework into every Claude Code session so it operates as a truly always-active behavioral ruleset.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/inject-framework.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "three-axes-framework",
+  "version": "1.0.0",
+  "description": "Governs how AI assists developers by calibrating behavior across three axes — Mastery, Consequence, and Intent — to prevent comprehension debt while maximizing productivity.",
+  "author": {
+    "name": "Lux Solari",
+    "email": "luxsolari@outlook.com",
+    "url": "https://github.com/luxsolari"
+  },
+  "repository": "https://github.com/luxsolari/three-axes-framework",
+  "license": "MIT",
+  "keywords": [
+    "ai-assisted-development",
+    "comprehension-debt",
+    "developer-philosophy",
+    "learning",
+    "code-quality"
+  ]
+}
