@@ -1,39 +1,70 @@
 #!/usr/bin/env node
 /**
- * Three Axes Framework — SessionStart injector
+ * Three Axes Framework — SessionStart injector (v1.1.0)
  *
- * Reads the SKILL.md and injects the framework as a systemMessage so it
- * operates as a background behavioral ruleset for the entire session,
- * regardless of topic or keyword triggers.
+ * Reads the SKILL.md, resolves the profile cascade, detects first-run,
+ * wipes the session file on startup, and injects everything as additionalContext.
  */
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, unlinkSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import {
+  globalProfilePath,
+  projectProfilePath,
+  sessionProfilePath,
+  resolveProfile,
+  isFirstRun,
+} from './lib/profile.mjs';
 
 const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+if (!pluginRoot) process.exit(0);
 
-if (!pluginRoot) {
-  // Not running inside a Claude Code plugin context — exit silently.
-  process.exit(0);
+// --- Read event type from stdin ---
+let sessionEvent = 'startup';
+try {
+  const chunks = [];
+  for await (const chunk of process.stdin) chunks.push(chunk);
+  const input = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  sessionEvent = input.session_event ?? input.trigger ?? input.event ?? 'startup';
+} catch { /* default to startup — safe: wipes session, never skips injection */ }
+
+// --- Wipe session file on startup only ---
+const sessionPath = sessionProfilePath();
+if (sessionEvent === 'startup' && existsSync(sessionPath)) {
+  try { unlinkSync(sessionPath); } catch { /* ignore */ }
 }
 
+// --- Load SKILL.md ---
 const skillPath = join(pluginRoot, 'skills', 'three-axes-framework', 'SKILL.md');
-
 let skillContent;
 try {
   skillContent = readFileSync(skillPath, 'utf8');
 } catch {
-  // SKILL.md missing — exit silently, don't break the session.
   process.exit(0);
 }
+const frameworkBody = skillContent.replace(/^---[\s\S]*?---\n/, '').trim();
 
-// Strip YAML frontmatter (--- ... ---) before injecting the body only.
-const body = skillContent.replace(/^---[\s\S]*?---\n/, '').trim();
+// --- Resolve profile cascade ---
+const globalPath  = globalProfilePath();
+const projectPath = projectProfilePath();
+const { values, sources } = resolveProfile(globalPath, projectPath, sessionPath);
 
+// --- Build axis context block ---
+const axisLines = Object.entries(values)
+  .map(([axis, value]) => `  ${axis}: ${value} (${sources[axis]})`)
+  .join('\n');
+const axisContext = `## Active Profile\n\n${axisLines}`;
+
+// --- First-run prompt ---
+const firstRunPrompt = isFirstRun(globalPath, projectPath)
+  ? `\n\n## First Run\n\nNo Three Axes profile found. Please start this session by running \`/three-axes setup\` to configure your profile. Until then, defaults apply (mastery: medium, consequence: medium, intent: balanced).`
+  : '';
+
+// --- Output ---
 const output = {
   suppressOutput: true,
   systemMessage: 'Three Axes Framework active.',
-  additionalContext: body
+  additionalContext: `${frameworkBody}\n\n${axisContext}${firstRunPrompt}`,
 };
 
 process.stdout.write(JSON.stringify(output) + '\n');
