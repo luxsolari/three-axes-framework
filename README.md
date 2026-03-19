@@ -86,3 +86,102 @@ MIT — free to use, fork, and adapt.
 ## Author
 
 **Lux Solari** — [luxsolari@outlook.com](mailto:luxsolari@outlook.com)
+
+## How it works
+
+The framework operates across three tiers. Each tier has narrower scope and higher priority:
+
+```
+Tier 1 — Persistent Profile         ~/.claude/three-axes-profile.json (global)
+                                     .three-axes.json (project root, committable)
+         ↓ overridden by
+Tier 2 — Session Commands            ~/.claude/three-axes-session.json
+         written by /three-axes mode and /three-axes set
+         cleared on session start, preserved across compact/resume
+         ↓ overridden by
+Tier 3 — Conversational Signals      natural language, no files written, task-scoped
+```
+
+**Tier 3 mode-switch signals:**
+
+| Say | Mode | Effect | Duration |
+|---|---|---|---|
+| "Let me try this" | Mentor | AI steps aside, reviews on request | Until attempt completes |
+| "Just do it" | Output | Efficient, minimal ceremony | Single task |
+| "Walk me through this" | Growth | AI teaches thoroughly | Until topic closes |
+| "What are the tradeoffs?" | Design | AI presents alternatives, no recommendation | Single response |
+
+---
+
+## Commands
+
+### `/three-axes setup`
+Interactive first-run setup. Asks about each axis and writes your profile to `~/.claude/three-axes-profile.json`. Also triggered automatically on first session if no profile exists.
+
+### `/three-axes status`
+Shows the resolved profile for the current session, with source label for each axis (`global`, `project`, `session`, or `default`).
+
+```
+Three Axes Framework — current session
+  mastery:     high        (global)
+  consequence: high        (project)
+  intent:      balanced    (default)
+```
+
+### `/three-axes mode <preset>`
+Applies a named preset to the session (ephemeral — cleared on next startup).
+
+| Preset | mastery | consequence | intent |
+|---|---|---|---|
+| `learning` | low | low | growth |
+| `output` | high | medium | output |
+| `production` | high | high | output |
+| `explore` | low | medium | growth |
+| `balanced` | medium | medium | balanced |
+
+### `/three-axes set <axis>=<value> [--project|--global]`
+Sets individual axis values. Default scope is session.
+
+```bash
+/three-axes set mastery=high                    # session (ephemeral)
+/three-axes set consequence=high --project      # writes .three-axes.json
+/three-axes set intent=growth --global          # writes ~/.claude/three-axes-profile.json
+/three-axes set mastery=low intent=growth       # multiple axes, session scope
+```
+
+Valid values:
+- `mastery`: `low` | `medium` | `high`
+- `consequence`: `low` | `medium` | `high`
+- `intent`: `growth` | `balanced` | `output`
+
+---
+
+## Profile Configuration
+
+### Profile cascade
+
+```
+1. ~/.claude/three-axes-profile.json   global default (all projects)
+2. .three-axes.json                    project override (repo root, committable)
+3. ~/.claude/three-axes-session.json   session override (ephemeral, auto-cleared)
+```
+
+Keys not set in a layer fall through to the layer below. A project file with only `{ "consequence": "high" }` overrides just that axis, inheriting the rest from the global profile.
+
+### Schema
+
+All three files share the same optional-key shape:
+
+```json
+{
+  "mastery":     "low" | "medium" | "high",
+  "consequence": "low" | "medium" | "high",
+  "intent":      "growth" | "balanced" | "output"
+}
+```
+
+**Defaults** (when no layer specifies a value): `mastery=medium`, `consequence=medium`, `intent=balanced`.
+
+### Project profiles
+
+`.three-axes.json` is committable by default — useful for sharing team defaults. Add it to `.gitignore` if you want per-developer settings only.
