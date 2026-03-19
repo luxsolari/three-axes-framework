@@ -32,7 +32,8 @@ const body = skillContent.replace(/^---[\s\S]*?---\n/, '').trim();
 
 const output = {
   suppressOutput: true,
-  systemMessage: `Three Axes Framework — active for this session:\n\n${body}`
+  systemMessage: 'Three Axes Framework active.',
+  additionalContext: body
 };
 
 process.stdout.write(JSON.stringify(output) + '\n');
