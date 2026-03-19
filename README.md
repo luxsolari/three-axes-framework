@@ -87,7 +87,7 @@ MIT — free to use, fork, and adapt.
 
 **Lux Solari** — [luxsolari@outlook.com](mailto:luxsolari@outlook.com)
 
-## How it works
+## Three-tier profile system
 
 The framework operates across three tiers. Each tier has narrower scope and higher priority:
 
