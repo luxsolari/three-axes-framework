@@ -18,23 +18,34 @@ Based on where a task sits on these axes, the AI adjusts its six core principles
 
 ## Installation
 
-### Via Claude Code CLI
+### Via the lux-solari-plugins marketplace (recommended)
 
 ```bash
-cc --plugin-dir /path/to/three-axes-framework
+# 1. Add the marketplace (one-time)
+claude plugins marketplace add luxsolari/lux-solari-plugins
+
+# 2. Install the plugin
+claude plugins install three-axes-framework@lux-solari-plugins
 ```
 
-### Via Claude Code Marketplace
+Or from inside Claude Code:
 
-Search for **"three-axes-framework"** in the Claude Code plugin marketplace and click Install.
+```
+/plugin marketplace add luxsolari/lux-solari-plugins
+/plugin install three-axes-framework@lux-solari-plugins
+```
+
+### Direct GitHub install (no marketplace)
+
+```bash
+claude plugins install three-axes-framework@github:luxsolari/three-axes-framework
+```
 
 ### Local development / testing
 
-Clone this repo and point Claude Code at it:
-
 ```bash
 git clone https://github.com/luxsolari/three-axes-framework
-cc --plugin-dir ./three-axes-framework
+claude plugin validate ./three-axes-framework
 ```
 
 ## How it works
