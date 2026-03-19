@@ -11,20 +11,23 @@ Guide me through setting up my Three Axes Framework profile. Follow these steps 
    - **low** — actively learning, every struggle is valuable
    - **medium** — conversationally fluent, building deep intuition
    - **high** — expert, you can critically review AI-generated code"
+   If the answer is not one of `low`, `medium`, or `high`, respond: 'Please choose one of: low, medium, high.' and repeat the question.
 
 3. Once I answer mastery, ask about **Consequence** — and only this:
    "What's the typical consequence level of the work you do?
    - **low** — personal experiments, throwaway scripts, learning exercises
    - **medium** — shared tools, libraries, portfolio-grade projects
    - **high** — production systems, money, user data, professional deliverables"
+   If the answer is not one of `low`, `medium`, or `high`, respond: 'Please choose one of: low, medium, high.' and repeat the question.
 
 4. Once I answer consequence, ask about **Intent** — and only this:
    "What's your primary intent when working with AI?
    - **growth** — learning new languages, exploring architectures (AI teaches, doesn't solve)
    - **balanced** — real projects where quality results and learning both matter
    - **output** — shipping features, meeting deadlines (AI can do more heavy lifting)"
+   If the answer is not one of `growth`, `balanced`, or `output`, respond: 'Please choose one of: growth, balanced, output.' and repeat the question.
 
-5. Confirm my choices and ask if I want to proceed.
+5. Confirm my choices and ask if I want to proceed. If the user says 'no', 'cancel', or wants to change an answer, return to the relevant question (step 2, 3, or 4). If they want to abort entirely, stop without writing any file and tell them: 'Setup cancelled. Run `/three-axes setup` whenever you're ready.'
 
 6. Write my answers to `~/.claude/three-axes-profile.json` using the Write tool. Use this exact schema:
    ```json

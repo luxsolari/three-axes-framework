@@ -30,7 +30,7 @@ Follow these steps:
    - `--project`: `.three-axes.json` at git repo root. Run `git rev-parse --show-toplevel` via Bash to find the root. If not a git repo, use the current working directory. The file will be created if it doesn't exist.
    - (default): `~/.claude/three-axes-session.json`
 
-4. Read the existing target file (treat missing as `{}`). Merge the new values in. Write the result using the Write tool.
+4. Read the existing target file (treat missing as `{}`). From the existing content, keep only the three known axis keys (`mastery`, `consequence`, `intent`) — discard any unknown keys. Merge the new values in. Write the result using the Write tool.
 
 5. Confirm: "Set <axis>=<value> [, <axis>=<value>...] in <scope> profile." where scope is `session`, `project`, or `global`.
    Add: "Use `/three-axes status` to see the full resolved profile."

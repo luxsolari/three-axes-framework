@@ -17,6 +17,8 @@ The arguments passed to this command are: $ARGUMENTS
 
 Follow these steps:
 
+0. If `$ARGUMENTS` is empty or blank, respond: 'Usage: /three-axes mode <preset>. Available presets: learning, output, production, explore, balanced' and stop.
+
 1. Parse the preset name from: `$ARGUMENTS` (trim whitespace, lowercase).
 
 2. If the preset is not in the table above, respond with:
@@ -25,7 +27,7 @@ Follow these steps:
 
 3. Look up the three axis values for the preset.
 
-4. Write `~/.claude/three-axes-session.json` using the Write tool with this content:
+4. Write `~/.claude/three-axes-session.json` using the Write tool with this content (note: this intentionally replaces the entire session profile — presets always set all three axes):
    ```json
    {
      "mastery": "<value>",
