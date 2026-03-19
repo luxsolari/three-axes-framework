@@ -17,6 +17,41 @@ The framework is grounded in research:
 
 ---
 
+## Interaction Model
+
+The framework operates across three tiers. Each tier has narrower scope and higher priority than the one below it:
+
+```
+Tier 1 — Persistent Profile (baseline, cross-session)
+  ~/.claude/three-axes-profile.json   global default
+  .three-axes.json                    project override (repo root, committable)
+
+  ↓ overridden by
+
+Tier 2 — Session Commands (ephemeral, current session only)
+  ~/.claude/three-axes-session.json   written by /three-axes mode and /three-axes set
+  Cleared on startup, preserved across compact/resume
+
+  ↓ overridden by
+
+Tier 3 — Conversational Mode-Switch Signals (instant, current task only)
+  Natural language phrases that shift axis values in-context.
+  No file written. No persistence. Reverts when signal scope expires.
+```
+
+**Tier 3 signals — axis overrides and duration:**
+
+| Say | Mode | Axis override | Duration |
+|---|---|---|---|
+| "Let me try this" / "I want to take a crack at it" | **Mentor** | `mastery=low, intent=growth` | Attempt-bounded — stays active until user finishes their attempt or requests review. Acknowledge: "I'll step aside — give it a try and let me know when you want a review." |
+| "Just do it" / "Ship it" / "Handle the boilerplate" | **Output** | `mastery=high, intent=output` | Single-task — expires when the requested task is complete. |
+| "Walk me through this" / "Why this approach?" | **Growth** | `intent=growth` | Topic-bounded — stays active until the topic or explanation concludes. Acknowledge: "I'll walk you through it — let me know when you're ready to move on." |
+| "What are the tradeoffs?" | **Design** | `intent=balanced` + present-alternatives flag | Single-response — expires after presenting alternatives. Never give a default recommendation in this mode. |
+
+Unspecified axes in a tier-3 signal (marked —) inherit from the active tier-1/tier-2 profile.
+
+---
+
 ## The Three Axes
 
 Every task sits on three independent axes. The six principles below are always active — their *intensity* shifts based on where the current task lands.
