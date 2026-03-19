@@ -2,7 +2,7 @@
 /**
  * Three Axes Framework — SessionStart injector (v1.1.0)
  *
- * Reads the SKILL.md, resolves the profile cascade, detects first-run,
+ * Reads the SKILL.md, resolves the profile cascade,
  * wipes the session file on startup, and injects everything as additionalContext.
  */
 
@@ -13,7 +13,6 @@ import {
   projectProfilePath,
   sessionProfilePath,
   resolveProfile,
-  isFirstRun,
 } from './lib/profile.mjs';
 
 const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
@@ -56,17 +55,11 @@ const axisLines = Object.entries(values)
   .join('\n');
 const axisContext = `## Active Profile\n\n${axisLines}`;
 
-// --- First-run prompt ---
-// Phrased as an instruction TO Claude (not to the user) so Claude proactively surfaces it.
-const firstRunPrompt = isFirstRun(globalPath, projectPath)
-  ? `\n\n## IMPORTANT: First-Run Action Required\n\nNo Three Axes Framework profile has been configured yet. Your first response in this session MUST begin with this message to the user before addressing anything else:\n\n"Welcome! The Three Axes Framework is active but hasn't been configured yet. Run \`/three-axes setup\` to set your AI behavior preferences — it only takes a minute. Until then, defaults apply (mastery: medium, consequence: medium, intent: balanced)."\n\nAfter delivering this message, proceed normally.`
-  : '';
-
 // --- Output ---
 const output = {
   suppressOutput: true,
   systemMessage: 'Three Axes Framework active.',
-  additionalContext: `${frameworkBody}\n\n${axisContext}${firstRunPrompt}`,
+  additionalContext: `${frameworkBody}\n\n${axisContext}`,
 };
 
 process.stdout.write(JSON.stringify(output) + '\n');
