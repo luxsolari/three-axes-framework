@@ -204,13 +204,13 @@ Sets individual axis values. Default scope is session.
 /three-axes-set mastery=low intent=growth       # multiple axes, session scope
 ```
 
-### `/three-axes` and `/three-axes-framework`
-Bare invocation (no arguments) — either name works, so it's discoverable whether you remember the framework's short name or its full plugin name. Shows the active profile (equivalent to `/three-axes-status`) plus a quick command reference.
-
 Valid values:
 - `mastery`: `low` | `medium` | `high`
 - `consequence`: `low` | `medium` | `high`
 - `intent`: `growth` | `balanced` | `output`
+
+### `/three-axes` and `/three-axes-framework`
+Bare invocation (no arguments) — either name works, so it's discoverable whether you remember the framework's short name or its full plugin name. Shows the active profile (equivalent to `/three-axes-status`) plus a quick command reference.
 
 ---
 
