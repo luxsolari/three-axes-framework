@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-07-02
+
+### Changed
+- **Third fresh-eyes pass:** moved README's "Troubleshooting" section from
+  between Installation and Quickstart to after Research basis, right before
+  License. A first-time reader following the doc top-to-bottom used to hit
+  an SSH-permission-denied troubleshooting block (with key-generation
+  instructions) immediately after the install commands, before ever seeing
+  the success-path Quickstart — reading like "expect this to fail" rather
+  than "here's a fix if it does." Also added a note pointing at the cited
+  upstream issue's current status, since the troubleshooting content pins a
+  specific Claude Code version (`v2.1.80`) that may no longer apply by the
+  time someone reads it.
+
 ## [1.2.0] - 2026-07-02
 
 ### Fixed
