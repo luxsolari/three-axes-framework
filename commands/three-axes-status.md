@@ -26,4 +26,4 @@ Display the current Three Axes Framework profile. Follow these steps:
 
 5. If `~/.claude/three-axes-session.json` exists, add a note: "Session overrides are active. They will be cleared on next session start."
 
-6. If no profile files exist at all, add a note: "No profile configured. Run `/three-axes setup` to set your baseline."
+6. If no profile files exist at all, add a note: "No profile configured. Run `/three-axes-setup` to set your baseline."

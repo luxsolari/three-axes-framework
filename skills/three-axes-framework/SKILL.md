@@ -29,7 +29,7 @@ Tier 1 — Persistent Profile (baseline, cross-session)
   ↓ overridden by
 
 Tier 2 — Session Commands (ephemeral, current session only)
-  ~/.claude/three-axes-session.json   written by /three-axes mode and /three-axes set
+  ~/.claude/three-axes-session.json   written by /three-axes-mode and /three-axes-set
   Cleared on startup, preserved across compact/resume
 
   ↓ overridden by

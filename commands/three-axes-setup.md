@@ -71,9 +71,9 @@ Guide me through setting up my Three Axes Framework profile. Follow these steps 
 
    Your profile is a baseline, not a constraint — you have three ways to shift AI behavior at any time:
 
-   - **Presets** (session-wide): `/three-axes mode learning`, `production`, `output`, `explore`, or `balanced`
-   - **Granular** (persistent or session): `/three-axes set mastery=high`, `consequence=low --project`, `intent=growth --global`, etc.
+   - **Presets** (session-wide): `/three-axes-mode learning`, `production`, `output`, `explore`, or `balanced`
+   - **Granular** (persistent or session): `/three-axes-set mastery=high`, `consequence=low --project`, `intent=growth --global`, etc.
    - **Conversational signals** (task-scoped, no commands needed): say things like *"walk me through this"*, *"let me try this"*, *"just do it"*, or *"what are the tradeoffs?"* — these shift behavior for that task only, then revert automatically.
 
-   Run `/three-axes status` at any time to see the active profile and where each value comes from.
+   Run `/three-axes-status` at any time to see the active profile and where each value comes from.
    ---

@@ -1,5 +1,8 @@
 # Three Axes Framework
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.2.0-informational.svg)](CHANGELOG.md)
+
 A Claude Code plugin that installs the **Three Axes Framework** — an always-active AI development philosophy that calibrates AI behavior to prevent comprehension debt while maximizing productivity.
 
 ## What it does
@@ -22,10 +25,10 @@ Based on where a task sits on these axes, the AI adjusts its six core principles
 
 ```bash
 # 1. Add the marketplace (one-time)
-claude plugins marketplace add luxsolari/lux-solari-plugins
+claude plugin marketplace add luxsolari/lux-solari-plugins
 
 # 2. Install the plugin
-claude plugins install three-axes-framework@lux-solari-plugins
+claude plugin install three-axes-framework@lux-solari-plugins
 ```
 
 Or from inside Claude Code:
@@ -39,8 +42,11 @@ Or from inside Claude Code:
 
 ```bash
 git clone https://github.com/luxsolari/three-axes-framework
-claude plugin validate ./three-axes-framework
+claude plugin validate ./three-axes-framework   # verify structure
+claude --plugin-dir ./three-axes-framework      # load it for a real session, no install needed
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor workflow.
 
 ## Troubleshooting
 
@@ -85,14 +91,14 @@ This redirects all SSH clone attempts to HTTPS. Useful for WSL, Docker, or CI en
 
 ```bash
 # 1. Install
-claude plugins marketplace add luxsolari/lux-solari-plugins
-claude plugins install three-axes-framework@lux-solari-plugins
+claude plugin marketplace add luxsolari/lux-solari-plugins
+claude plugin install three-axes-framework@lux-solari-plugins
 
 # 2. Configure your profile (run once)
-/three-axes setup
+/three-axes-setup
 
 # 3. Check what's active at any time
-/three-axes status
+/three-axes-status
 ```
 
 That's it. The framework runs automatically from this point on — no further setup needed.
@@ -100,9 +106,9 @@ That's it. The framework runs automatically from this point on — no further se
 **Need a quick mode change?** Use presets for the current session:
 
 ```bash
-/three-axes mode learning     # exploring something new
-/three-axes mode production   # high-stakes work
-/three-axes mode output       # just ship it
+/three-axes-mode learning     # exploring something new
+/three-axes-mode production   # high-stakes work
+/three-axes-mode output       # just ship it
 ```
 
 Or tell Claude directly: *"Walk me through this"*, *"Let me try this"*, *"Just do it"*.
@@ -145,7 +151,7 @@ Tier 1 — Persistent Profile         ~/.claude/three-axes-profile.json (global)
                                      .three-axes.json (project root, committable)
          ↓ overridden by
 Tier 2 — Session Commands            ~/.claude/three-axes-session.json
-         written by /three-axes mode and /three-axes set
+         written by /three-axes-mode and /three-axes-set
          cleared on session start, preserved across compact/resume
          ↓ overridden by
 Tier 3 — Conversational Signals      natural language, no files written, task-scoped
@@ -164,10 +170,10 @@ Tier 3 — Conversational Signals      natural language, no files written, task-
 
 ## Commands
 
-### `/three-axes setup`
+### `/three-axes-setup`
 Interactive first-run setup. Asks about each axis and writes your profile to `~/.claude/three-axes-profile.json`. Run this once after installation — until you do, the framework operates on defaults (`mastery: medium`, `consequence: medium`, `intent: balanced`).
 
-### `/three-axes status`
+### `/three-axes-status`
 Shows the resolved profile for the current session, with source label for each axis (`global`, `project`, `session`, or `default`).
 
 ```
@@ -177,7 +183,7 @@ Three Axes Framework — current session
   intent:      balanced    (default)
 ```
 
-### `/three-axes mode <preset>`
+### `/three-axes-mode <preset>`
 Applies a named preset to the session (ephemeral — cleared on next startup).
 
 | Preset | mastery | consequence | intent |
@@ -188,20 +194,23 @@ Applies a named preset to the session (ephemeral — cleared on next startup).
 | `explore` | low | medium | growth |
 | `balanced` | medium | medium | balanced |
 
-### `/three-axes set <axis>=<value> [--project|--global]`
+### `/three-axes-set <axis>=<value> [--project|--global]`
 Sets individual axis values. Default scope is session.
 
 ```bash
-/three-axes set mastery=high                    # session (ephemeral)
-/three-axes set consequence=high --project      # writes .three-axes.json
-/three-axes set intent=growth --global          # writes ~/.claude/three-axes-profile.json
-/three-axes set mastery=low intent=growth       # multiple axes, session scope
+/three-axes-set mastery=high                    # session (ephemeral)
+/three-axes-set consequence=high --project      # writes .three-axes.json
+/three-axes-set intent=growth --global          # writes ~/.claude/three-axes-profile.json
+/three-axes-set mastery=low intent=growth       # multiple axes, session scope
 ```
 
 Valid values:
 - `mastery`: `low` | `medium` | `high`
 - `consequence`: `low` | `medium` | `high`
 - `intent`: `growth` | `balanced` | `output`
+
+### `/three-axes` and `/three-axes-framework`
+Bare invocation (no arguments) — either name works, so it's discoverable whether you remember the framework's short name or its full plugin name. Shows the active profile (equivalent to `/three-axes-status`) plus a quick command reference.
 
 ---
 
