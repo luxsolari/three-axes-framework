@@ -250,9 +250,4 @@ git config --global url."https://github.com/".insteadOf "git@github.com:"
 This redirects all SSH clone attempts to HTTPS. Useful for WSL, Docker, or CI environments where setting up SSH keys isn't practical.
 
 ## License
-
 MIT — free to use, fork, and adapt.
-
-## Author
-
-**Lux Solari** — [luxsolari@outlook.com](mailto:luxsolari@outlook.com)
