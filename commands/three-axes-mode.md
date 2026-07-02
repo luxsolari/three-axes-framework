@@ -1,5 +1,5 @@
 ---
-description: Apply a named preset to the current session. Usage: /three-axes mode <preset>. Available presets: learning, output, production, explore, balanced.
+description: Apply a named preset to the current session. Usage: /three-axes-mode <preset>. Available presets: learning, output, production, explore, balanced.
 ---
 
 Apply a named preset to the Three Axes Framework session profile.
@@ -17,7 +17,7 @@ The arguments passed to this command are: $ARGUMENTS
 
 Follow these steps:
 
-0. If `$ARGUMENTS` is empty or blank, respond: 'Usage: /three-axes mode <preset>. Available presets: learning, output, production, explore, balanced' and stop.
+0. If `$ARGUMENTS` is empty or blank, respond: 'Usage: /three-axes-mode <preset>. Available presets: learning, output, production, explore, balanced' and stop.
 
 1. Parse the preset name from: `$ARGUMENTS` (trim whitespace, lowercase).
 
@@ -36,4 +36,4 @@ Follow these steps:
    }
    ```
 
-5. Confirm: "Session set to **<preset>** preset (mastery: <value>, consequence: <value>, intent: <value>). This applies for the current session only and will reset on next startup. Use `/three-axes status` to verify."
+5. Confirm: "Session set to **<preset>** preset (mastery: <value>, consequence: <value>, intent: <value>). This applies for the current session only and will reset on next startup. Use `/three-axes-status` to verify."

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-02
+
+### Fixed
+- **Command invocation syntax.** All four subcommands (`setup`, `status`, `mode`, `set`) lived at `commands/three-axes/*.md` — a nested folder — while every doc (this README, all command files' own cross-references, SKILL.md) consistently documented space-separated invocation (`/three-axes setup`). Claude Code documents commands as flat `.md` files with no specified nested-folder namespacing convention, unlike `skills/` which explicitly uses colon-namespacing (`/plugin:skill`). Rather than leave that ambiguous, flattened the files to `commands/three-axes-{setup,status,mode,set}.md` and updated every reference to the now-unambiguous hyphenated form (`/three-axes-setup`, `/three-axes-status`, `/three-axes-mode`, `/three-axes-set`) — the same pattern this project's own bare `/three-axes` and `/three-axes-framework` commands already used successfully.
+- **README's Installation and Quickstart bash blocks used `claude plugins marketplace add` / `claude plugins install`** (plural "plugins") — the documented CLI is singular (`claude plugin marketplace add`, `claude plugin install`). As written, these would likely have failed if run literally.
+- **CONTRIBUTING.md's remote-marketplace install command was missing the `luxsolari/` owner prefix** (`lux-solari-plugins` instead of `luxsolari/lux-solari-plugins`), inconsistent with every other instance in this project and in sage-instructor.
+- **CONTRIBUTING.md referenced an unexplained `@local` marketplace** ("if you have the local marketplace configured" — never said how). Replaced with the verified `claude --plugin-dir .` flow for local testing, matching the fix applied to sage-instructor.
+
+### Added
+- README's Commands section now documents the bare `/three-axes` / `/three-axes-framework` invocation (added in 1.1.2/1.1.3) — it was shipped but never listed alongside the other four commands.
+- License and version badges in README, both linked (to `LICENSE` and `CHANGELOG.md` respectively).
+
 ## [1.1.3] - 2026-03-19
 
 ### Added

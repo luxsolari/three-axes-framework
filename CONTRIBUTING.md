@@ -21,16 +21,18 @@ git clone https://github.com/luxsolari/three-axes-framework
 claude plugin validate ./three-axes-framework
 ```
 
-To install from your local clone (if you have the local marketplace configured):
+To load your local clone into a real session for manual testing — no marketplace or install step needed:
+
+```bash
+claude --plugin-dir ./three-axes-framework
+```
+
+After editing a command or the skill mid-session, run `/reload-plugins` to pick up the change without restarting.
+
+Or install from the published marketplace:
 
 ```
-/plugin install three-axes-framework@local
-```
-
-Or install directly from the remote marketplace:
-
-```
-/plugin marketplace add lux-solari-plugins
+/plugin marketplace add luxsolari/lux-solari-plugins
 /plugin install three-axes-framework@lux-solari-plugins
 ```
 
