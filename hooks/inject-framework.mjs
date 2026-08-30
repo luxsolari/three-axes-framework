@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Three Axes Framework — SessionStart injector (v1.1.0)
+ * Three Axes Framework — SessionStart injector
  *
  * Reads the SKILL.md, resolves the profile cascade,
  * wipes the session file on startup, and injects everything as additionalContext.

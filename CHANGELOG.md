@@ -7,6 +7,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-08-30
+
+### Added
+- **The Integrity Rules (IR-01 … IR-13)** in `SKILL.md`. The six principles govern how much
+  the AI does; these thirteen govern how honestly it does it — closing the failure modes that
+  erode trust in AI-assisted work: self-certification, confident guessing, silent scope creep,
+  guess-patch loops, unrequested "cleanup" of comments and docs, and apology loops that
+  displace the useful reply, and reflexive agreement that hides a wrong assumption instead of
+  correcting it. Each rule carries an ID so either side of the conversation can cite a
+  specific rule instead of arguing about vibes.
+
+  The rules are always in force; the *ceremony* around them scales with the axes. Consequence
+  high makes IR-02 (diagnose before patching) and IR-08 (close with a status) formal and
+  written down; consequence low with output intent compresses both to one line. Mastery low
+  weights IR-03 and IR-09 most heavily — a developer still building intuition cannot catch a
+  confident wrong answer or recognise misplaced blame.
+
+- **`/three-axes-audit [what went wrong]`** — the recovery path when a rule is broken. The
+  audit turn is constrained: no code, no apology, no resuming the interrupted task. It names
+  the violated rule by ID with the offending output quoted, gives a *mechanical* account of
+  the cause (an instruction fell out of recent context; an assumption replaced a missing
+  input) rather than a moral one ("I should have been more careful"), proposes a concrete
+  correction mechanism, and rates the session `CLEAN` / `DEGRADED` / `COMPROMISED`.
+
+  If no existing rule covers the failure, the command requires saying so and proposing a
+  candidate rule rather than manufacturing a confession — a ruleset that grows out of real
+  failures is worth more than one that produces guilt on demand.
+
+- **`/three-axes-handoff [output-path]`** — a continuity document for a fresh session, for
+  when the context window is saturated or corrections have stopped sticking. Captures the
+  two things handoffs habitually lose: a **failure log** (every approach tried and abandoned,
+  with the reason, so the next session does not re-derive the same dead ends) and an
+  **intent map** (code that looks removable but is load-bearing — unreferenced functions,
+  defensive branches, deliberate duplication). Closes with an explicit caveat that the
+  outgoing diagnosis is a hypothesis to verify; if it were reliable the handoff would
+  probably not have been needed.
+
+- **`/three-axes-log [note]`** — appends a completed-task entry to `BITACORA.md` at the repo
+  root. IR-08 closes the loop inside the conversation; this closes it on disk, so the next
+  agent to open the repo reads what was done, verified, left open and ruled out instead of
+  re-deriving it from the diff and burning tokens rebuilding context that already existed.
+
+  Entries are newest-first and written in the language the repository already uses. Past
+  ~40 entries the log compacts: everything older than the most recent 15 folds into a
+  one-line-per-entry historical summary. Compaction is lossy by design but never drops a
+  **decision** or a **recorded failure** — those are exactly what stop a later session
+  re-litigating a settled question or re-walking a dead end; routine detail goes instead.
+  The command's page carries a `CLAUDE.md` / `AGENTS.md` block to paste into a repo so every
+  agent working there maintains the same log.
+
+- `tests/plugin-structure.test.mjs` — asserts every command file has parseable frontmatter
+  with a `description`, that IR IDs in `SKILL.md` are unique and contiguous from IR-01, that
+  every command referenced in the docs and in either command menu exists on disk, that every
+  shipped command has a row in both menus and the two menus agree, and that `plugin.json`'s
+  version matches the README badge and the newest CHANGELOG entry. Wired into CI alongside the
+  existing profile tests.
+
+### Changed
+- SKILL.md gained a "Session commands" subsection documenting `/three-axes-audit`,
+  `/three-axes-handoff` and `/three-axes-log` next to the existing conversational
+  mode-switch signals.
+- README's context-window cost note updated from ~2,400 to **~3,550 tokens** per session
+  (~1.7% of a 200k window). Both figures are estimated from the hook's real output payload
+  at ~4 chars/token — the same method behind the 1.2.1 number, so they are comparable — and
+  the README now says so rather than implying a precise measurement.
+- `plugin.json` description and keywords now mention the Integrity Rules.
+
+### Credits
+- The Integrity Rules take their central idea — enumerating AI failure modes and giving them
+  IDs, rather than gesturing at "be careful" — from Santiago Bustelo's
+  [Perkele Protocol](https://github.com/sbustelo/AI-DevTools/tree/main/AI-PerkeleProtocols).
+  Two departures are deliberate: that protocol treats adversarial pressure as the enforcement
+  mechanism (its own LAW_57 concedes the cost, instructing the model to read anger as a
+  trigger for *more* caution — which survives here as IR-11, without the hostility), and it
+  demands total submission to the operator, where this framework depends on the AI pushing
+  back.
+
 ## [1.2.1] - 2026-07-02
 
 ### Changed
