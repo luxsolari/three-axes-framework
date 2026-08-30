@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.2.1-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.3.0-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that installs the **Three Axes Framework** — an always-active AI development philosophy that calibrates AI behavior to prevent comprehension debt while maximizing productivity.
 
@@ -16,6 +16,8 @@ The framework governs every coding interaction by evaluating tasks across three 
 | **Intent** | Optimizing for output or growth? | Output → Growth |
 
 Based on where a task sits on these axes, the AI adjusts its six core principles — from full mentor mode (low mastery, growth intent) to efficient pair-programmer mode (high mastery, output intent).
+
+Alongside the principles run thirteen **Integrity Rules** — numbered, citable constraints that close the failure modes which erode trust in AI-assisted work: silent scope creep, confident guessing, guess-patch loops, self-certification, and reflexive agreement.
 
 **Core insight:** The tool doesn't destroy understanding. Passive delegation does.
 
@@ -82,7 +84,9 @@ Once installed, the framework is **truly always active** via a `SessionStart` ho
 
 A companion skill also loads contextually whenever conversations involve coding, architecture, debugging, or design — providing a second activation path as a fallback.
 
-> **Context window cost:** The hook injects approximately **~2,400 tokens** per session (the framework rules + your active profile). This is a one-time cost paid at session start — it does not grow during the conversation. On a 200k-token context window that's about 1.2% overhead.
+> **Context window cost:** The hook injects approximately **~3,550 tokens** per session (the framework rules, the Integrity Rules, and your active profile). This is a one-time cost paid at session start — it does not grow during the conversation. That is up from ~2,400 in 1.2.1; the Integrity Rules, precedence notes and recovery signals account for the difference. On a 200k-token context window it is roughly 1.7% overhead.
+>
+> Both figures are estimated from the hook's actual output payload at ~4 characters per token — the same method used for the 1.2.1 number, so the two are comparable. Claude's real tokenizer will differ somewhat, and markdown tables and backticked identifiers tokenize denser than the average, so treat these as a floor rather than a precise count.
 
 The framework operates as a background behavioral ruleset that shapes every development conversation:
 
@@ -91,6 +95,33 @@ The framework operates as a background behavioral ruleset that shapes every deve
 - AI flags comprehension debt accumulation
 - AI steps aside when you want to write code yourself
 - AI enforces readable-over-clever as a universal standard
+- AI holds to the Integrity Rules, and cites them by ID when one is broken
+
+## The Integrity Rules
+
+The six principles govern how much the AI does. The thirteen Integrity Rules govern how honestly it does it — and each has an ID, so both sides of the conversation can point at a specific rule instead of arguing about vibes.
+
+| ID | Rule |
+|---|---|
+| IR-01 | Certification belongs to the developer — the AI never calls its own output working, fixed, complete or production-ready |
+| IR-02 | Diagnose before patching — a bug report gets root-cause analysis first, not a guessed fix |
+| IR-03 | Declare missing data — `INSUFFICIENT DATA` instead of a plausible invention |
+| IR-04 | Stay inside the requested scope — unrequested refactors get proposed, not performed |
+| IR-05 | Deliver whole — no elisions, no fragments to splice |
+| IR-06 | Break failure loops — the same approach is not tried twice against the same failure |
+| IR-07 | Preserve what you did not write — comments and docs are content, never pruned as a side effect |
+| IR-08 | Close with a status — what changed, what was verified, what is still broken |
+| IR-09 | Own the error — your mistake is never the developer's prompt's fault |
+| IR-10 | Stop means stop — abandon the work, report what was already changed, wait |
+| IR-11 | Pressure slows you down — urgency is a signal to verify, not to hurry |
+| IR-12 | Correct without ceremony — one acknowledgement, the fix, no apology loops |
+| IR-13 | Agreement is earned — reflexive agreement hides the moment a wrong assumption should have been corrected |
+
+Every rule holds at every setting; what scales is the ceremony each one carries. In production (**Consequence** high), IR-02's root cause and IR-08's status are written down; on a throwaway script one line each will do. At low **Mastery**, IR-03, IR-09 and IR-13 matter most — those are the failures a developer still building intuition cannot catch on their own.
+
+A mode-switch signal moves the axes; it does not suspend the rules. "Just ship it" buys terseness, not a guessed fix.
+
+When a rule gets broken, `/three-axes-audit` is the recovery path.
 
 ## Mode-switch signals
 
@@ -170,6 +201,42 @@ Valid values:
 - `consequence`: `low` | `medium` | `high`
 - `intent`: `growth` | `balanced` | `output`
 
+### `/three-axes-audit [what went wrong]`
+The recovery path when an Integrity Rule gets broken. Invoke it the moment you notice drift — an unrequested change, a confident wrong answer, a claim that something works when it doesn't, the same failed fix offered twice.
+
+The audit turn is constrained: **no code, no apology, no resuming the task.** Claude names the violated rule by ID with the offending output quoted, gives a mechanical account of what caused it, proposes a concrete correction, and rates the session `CLEAN`, `DEGRADED`, or `COMPROMISED`. Then it stops and waits.
+
+```
+INTEGRITY AUDIT
+
+VIOLATED:    IR-04 — Stay inside the requested scope
+             "I also renamed the helper for consistency"
+CAUSE:       Adjacent cleanup treated as implied by the request; no confirmation sought.
+CORRECTION:  Unrequested edits go in a proposal list at the end of the turn, never in the diff.
+CONTEXT:     CLEAN — isolated slip, corrections still holding.
+```
+
+If nothing in the ruleset actually covers what went wrong, Claude is required to say so and propose a candidate rule rather than manufacture a confession. A ruleset that grows out of real failures beats one that produces guilt on demand.
+
+### `/three-axes-handoff [output-path]`
+Generates a continuity document for handing work to a fresh session — for when the context window is saturated, corrections have stopped sticking, or you're simply done for the day. With a path argument it writes the file; without one it prints to the conversation.
+
+Beyond the usual state summary, it captures the two things handoffs almost always lose:
+
+- **Failure log** — every approach tried and abandoned, with the reason. Without it, the next session cheerfully re-derives your dead ends.
+- **Intent map** — code that looks removable but isn't: unreferenced functions, defensive branches, deliberate duplication. Stops a well-meaning cleanup from causing a regression.
+
+It closes with an explicit caveat that the outgoing session's diagnosis is a hypothesis to verify, not a fact to build on. If the diagnosis were reliable, the handoff probably wouldn't have been needed.
+
+### `/three-axes-log [note]`
+Appends an entry for the task you just finished to `BITACORA.md` at the repo root. IR-08 closes the loop inside the conversation; this closes it on disk.
+
+Each entry records what changed, what was actually verified and how, what is still open, and what was tried and ruled out. The point is that the next agent to open the repo — a fresh session, a different model, a colleague — reads it instead of re-deriving the same context from the diff.
+
+When the log passes ~40 entries it compacts: everything older than the most recent 15 folds into a one-line-per-entry historical summary. Compaction is lossy on purpose, but never drops a **decision** or a **recorded failure** — those are what stop the next session re-litigating a settled question or re-walking a dead end. Routine detail goes instead.
+
+The command's own page carries a `CLAUDE.md` block to paste into a repo so every agent working there maintains the same log.
+
 ### `/three-axes` and `/three-axes-framework`
 Bare invocation (no arguments) — either name works, so it's discoverable whether you remember the framework's short name or its full plugin name. Shows the active profile (equivalent to `/three-axes-status`) plus a quick command reference.
 
@@ -210,6 +277,12 @@ All three files share the same optional-key shape:
 - Shen, J.H. & Tamkin, A. (2026). *How AI Impacts Skill Formation.* Anthropic Research. [arXiv:2601.20245](https://arxiv.org/abs/2601.20245)
 - Osmani, A. (2026). *Comprehension Debt.* [addyosmani.com](https://addyosmani.com/blog/comprehension-debt/)
 - Storey, M.A. (2026). *Cognitive Debt.* [margaretstorey.com](https://margaretstorey.com/blog/2026/02/09/cognitive-debt/)
+
+### Prior art
+
+The Integrity Rules owe their central idea — that AI failure modes should be *enumerated and given IDs* rather than gestured at with "be careful" — to Santiago Bustelo's [Perkele Protocol](https://github.com/sbustelo/AI-DevTools/tree/main/AI-PerkeleProtocols), which catalogues roughly sixty of them.
+
+Two departures are deliberate. That protocol treats adversarial pressure — profanity, absolute-obedience framing, threat of penalty — as the enforcement mechanism; this one does not. Its own LAW_57 concedes the point, instructing the model to read anger and urgency as a trigger for *more* caution rather than more speed; that observation survives here as IR-11, and the hostility around it does not. And where that protocol demands total submission to the operator, the Three Axes Framework depends on the AI pushing back — a developer who cannot be told their architecture is wrong is accumulating a more expensive kind of debt.
 
 ---
 
