@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.3.0-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.4.0-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that installs the **Three Axes Framework** — an always-active AI development philosophy that calibrates AI behavior to prevent comprehension debt while maximizing productivity.
 
@@ -229,7 +229,7 @@ Beyond the usual state summary, it captures the two things handoffs almost alway
 It closes with an explicit caveat that the outgoing session's diagnosis is a hypothesis to verify, not a fact to build on. If the diagnosis were reliable, the handoff probably wouldn't have been needed.
 
 ### `/three-axes-log [note]`
-Appends an entry for the task you just finished to `BITACORA.md` at the repo root. IR-08 closes the loop inside the conversation; this closes it on disk.
+Appends an entry for the task you just finished to `JOURNAL.md` at the repo root. IR-08 closes the loop inside the conversation; this closes it on disk.
 
 Each entry records what changed, what was actually verified and how, what is still open, and what was tried and ruled out. The point is that the next agent to open the repo — a fresh session, a different model, a colleague — reads it instead of re-deriving the same context from the diff.
 

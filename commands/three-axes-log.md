@@ -1,5 +1,5 @@
 ---
-description: Append a completed-task entry to the repository's BITACORA.md work log, compacting older entries when the file grows. Usage: /three-axes-log [note].
+description: Append a completed-task entry to the repository's JOURNAL.md work log, compacting older entries when the file grows. Usage: /three-axes-log [note].
 ---
 
 Append an entry to the repository work log.
@@ -10,7 +10,7 @@ IR-08 closes the loop inside the conversation. This closes it on disk. The log e
 
 Follow these steps:
 
-1. **Locate the log.** Run `git rev-parse --show-toplevel` via Bash; use `BITACORA.md` at that root, or in the current working directory if this is not a git repo. Create the file with a `# Bitácora` heading if it does not exist.
+1. **Locate the log.** Run `git rev-parse --show-toplevel` via Bash; use `JOURNAL.md` at that root, or in the current working directory if this is not a git repo. Create the file with a `# Journal` heading if it does not exist. If a `BITACORA.md` is there from an earlier version of this command, rename it to `JOURNAL.md` (`git mv` where the repo is tracked) and continue in it — two parallel logs are worse than either one.
 
 2. **Write the entry from what actually happened this session**, using `$ARGUMENTS` as the developer's framing if provided. Newest entries go at the top, directly under the heading.
 
@@ -39,7 +39,7 @@ The log only pays off if every agent working in the repo maintains it. Add this 
 ```markdown
 ## Work log
 
-After completing any task, append an entry to `BITACORA.md` at the repo root:
+After completing any task, append an entry to `JOURNAL.md` at the repo root:
 what changed, what was verified and how, what is still open, what was ruled
 out and why, and the files that matter. Newest first.
 

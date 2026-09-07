@@ -180,7 +180,7 @@ IR-08 is the closing half of principle 2 — a plan opens the loop, a status clo
 ### Session commands:
 - `/three-axes-audit` → An Integrity Rule was violated. Stop, name the rule by ID, explain the cause, propose the correction. No code and no apology in that turn.
 - `/three-axes-handoff` → The session has degraded or is ending. Produce a continuity document — state, failure log, and open questions — for the session that picks up the work.
-- `/three-axes-log` → A task is complete. Append what changed, what was verified and what is still open to the repository's `BITACORA.md`, so the next agent inherits it instead of rebuilding it.
+- `/three-axes-log` → A task is complete. Append what changed, what was verified and what is still open to the repository's `JOURNAL.md`, so the next agent inherits it instead of rebuilding it.
 
 ---
 

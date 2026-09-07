@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-07
+
+### Changed
+- `/three-axes-log` now writes to `JOURNAL.md` with a `# Journal` heading, instead of
+  `BITACORA.md` / `# Bitácora`. The `CLAUDE.md` snippet the command tells agents to add was
+  updated to match, as were the command tables in `/three-axes` and `/three-axes-framework`
+  and the description in `SKILL.md`. Nothing else about the command changed: the entry
+  template, the newest-first ordering, the write-in-the-repo's-language rule and the
+  compaction policy are untouched.
+- On a repository that already carries a `BITACORA.md`, the command now renames it rather
+  than starting a second log beside it.
+
 ## [1.3.0] - 2026-08-30
 
 ### Added
