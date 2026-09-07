@@ -17,7 +17,7 @@ jobs:
       - name: Run profile unit tests
         run: node --test hooks/lib/__tests__/profile.test.mjs
       - name: Run plugin structure tests
-        run: node --test tests/plugin-structure.test.mjs
+        run: node --test tests/*.test.mjs
       - name: Validate plugin structure
         run: |
           test -f .claude-plugin/plugin.json

@@ -9,7 +9,7 @@ Open an issue at [github.com/luxsolari/three-axes-framework/issues](https://gith
 1. Fork the repository
 2. Create a branch: `git checkout -b feat/your-feature`
 3. Make your changes with tests where applicable
-4. Run tests: `node --test hooks/lib/__tests__/profile.test.mjs tests/plugin-structure.test.mjs`
+4. Run tests: `node --test hooks/lib/__tests__/profile.test.mjs tests/*.test.mjs`
    (both suites also run in CI on every push/PR to `main` — see
    `.github/workflows/ci.yml`). The structure suite catches the version bumped in
    `plugin.json` but not the README badge or the CHANGELOG heading, commands

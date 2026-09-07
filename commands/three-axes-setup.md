@@ -2,7 +2,13 @@
 description: Interactive setup for the Three Axes Framework profile. Asks about each axis one at a time and writes the result to ~/.claude/three-axes-profile.json.
 ---
 
-Guide me through setting up my Three Axes Framework profile. Follow these steps exactly:
+Guide me through setting up my Three Axes Framework profile.
+
+If the hook reports that the first-run setup gate is active, follow its guided
+setup instructions first: ask for global or project scope and the three values,
+then run its exact profile-writer command. The Write tool is blocked until setup
+is saved. Use the six-principle confirmation below after saving. Otherwise,
+follow these steps to reconfigure the global profile:
 
 1. Say in one sentence: "I'll ask you three quick questions to set your AI behavior baseline — you can change it anytime."
 

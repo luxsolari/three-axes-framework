@@ -1,7 +1,7 @@
 {
   "name": "three-axes-framework",
-  "version": "1.4.0",
-  "description": "Governs how AI assists developers by calibrating behavior across three axes — Mastery, Consequence, and Intent — to prevent comprehension debt, with thirteen citable Integrity Rules that keep the assistant honest about what it changed and what it verified.",
+  "version": "1.5.0",
+  "description": "Governs how AI assists developers by calibrating behavior across three axes \u2014 Mastery, Consequence, and Intent \u2014 to prevent comprehension debt, with thirteen citable Integrity Rules that keep the assistant honest about what it changed and what it verified.",
   "author": {
     "name": "Lux Solari",
     "email": "luxsolari@outlook.com",

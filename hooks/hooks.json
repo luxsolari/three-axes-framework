@@ -12,6 +12,29 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/require-profile.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/require-profile.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

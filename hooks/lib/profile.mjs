@@ -20,21 +20,24 @@ export function sessionProfilePath() {
   return resolve(homedir(), '.claude', 'three-axes-session.json');
 }
 
-export function projectProfilePath() {
+export function projectProfilePath(cwd = process.cwd()) {
   try {
     const root = execSync('git rev-parse --show-toplevel', {
       encoding: 'utf8',
+      cwd,
       stdio: ['pipe', 'pipe', 'pipe'],
     }).trim();
     return resolve(root, '.three-axes.json');
   } catch {
-    return resolve(process.cwd(), '.three-axes.json');
+    return resolve(cwd, '.three-axes.json');
   }
 }
 
 export function readProfile(filePath) {
   try {
-    return JSON.parse(readFileSync(filePath, 'utf8'));
+    const data = JSON.parse(readFileSync(filePath, 'utf8'));
+    return data !== null && typeof data === 'object' && !Array.isArray(data)
+      && validateProfile(data).length === 0 ? data : {};
   } catch {
     return {};
   }
@@ -68,7 +71,7 @@ export function writeProfile(filePath, data) {
 export function validateProfile(data) {
   const errors = [];
   for (const [axis, value] of Object.entries(data)) {
-    if (!VALID_AXES[axis]) {
+    if (!Object.hasOwn(VALID_AXES, axis)) {
       errors.push(`Unknown axis: "${axis}". Valid axes: ${Object.keys(VALID_AXES).join(', ')}`);
     } else if (!VALID_AXES[axis].includes(value)) {
       errors.push(`Invalid value for ${axis}: "${value}". Valid values: ${VALID_AXES[axis].join(', ')}`);
@@ -79,4 +82,30 @@ export function validateProfile(data) {
 
 export function isFirstRun(globalPath, projectPath) {
   return !existsSync(globalPath) && !existsSync(projectPath);
+}
+
+// A session override is never a substitute for a persistent baseline.
+export function isConfiguredProfile(filePath) {
+  try {
+    const data = JSON.parse(readFileSync(filePath, 'utf8'));
+    return data !== null && typeof data === 'object' && !Array.isArray(data)
+      && Object.keys(data).length > 0 && validateProfile(data).length === 0;
+  } catch {
+    return false;
+  }
+}
+
+export function persistentProfilePaths(cwd = process.cwd()) {
+  return { global: globalProfilePath(), project: projectProfilePath(cwd) };
+}
+
+export function hasPersistentProfile(cwd = process.cwd()) {
+  const paths = persistentProfilePaths(cwd);
+  return isConfiguredProfile(paths.global) || isConfiguredProfile(paths.project);
+}
+
+export function activeProfile(cwd = process.cwd()) {
+  const paths = persistentProfilePaths(cwd);
+  const global = paths.global;
+  return resolveProfile(global, paths.project, sessionProfilePath());
 }

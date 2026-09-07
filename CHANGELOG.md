@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-07
+
+### Added
+- Guided first-run setup in chat using native interactive option pickers when
+  available, one question at a time, with global/project scope selection and a
+  dedicated profile writer. Prompt and tool hooks keep project work paused until
+  a valid persistent profile exists; session overrides alone do not unlock work.
+- Integration coverage for setup, invalid profiles, tool denial, profile writes,
+  project-root discovery, and startup/resume behavior.
+
+### Fixed
+- Session injection reads the host's `source` and `cwd` fields, preserving session
+  overrides on resume/clear/compact and resolving the correct project profile.
+- Claude context uses the documented `hookSpecificOutput` envelope.
+- Invalid profile layers no longer override the resolved baseline.
+
 ## [1.4.0] - 2026-09-07
 
 ### Changed

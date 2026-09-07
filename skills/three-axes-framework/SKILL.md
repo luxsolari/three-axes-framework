@@ -17,6 +17,18 @@ The framework is grounded in research:
 
 ---
 
+## First-run setup gate
+
+Before project work, a valid persistent user or project profile is required.
+When the lifecycle hook reports setup is required, pause the original request,
+collect global/project scope and the three axis values with native interactive
+option pickers, one question at a time when available, and use the
+profile-writer command supplied by that hook. Question tools and that writer are
+the only permitted tool calls until a profile is saved. Do not silently accept
+defaults or use a session preset to bypass setup. Once saved, resume the original
+request. A valid partial persistent profile counts; omitted axes inherit defaults.
+Empty, malformed, non-object, or invalid profiles do not count.
+
 ## Interaction Model
 
 The framework operates across three tiers. Each tier has narrower scope and higher priority than the one below it:
