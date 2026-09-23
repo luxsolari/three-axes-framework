@@ -21,11 +21,14 @@ export function isSetupCommand(command, cwd) {
 export function setupContext(cwd) {
   const paths = persistentProfilePaths(cwd);
   const example = { mastery: 'medium', consequence: 'medium', intent: 'balanced' };
-  return `## Three Axes setup required
+  return `## Three Axes Framework profile required for project work
 
-No valid persistent user-level or project-level profile exists. Pause the requested
-work and guide the user through setup in this chat. Do not answer or carry out the
-original task yet. Only setup questions and the profile writer are permitted.
+The **Three Axes Framework plugin** is blocking this project chat because no valid
+persistent user-level or project-level profile exists. Tell the user this plainly
+before onboarding: "Three Axes Framework is blocking project work until you save a
+profile." Pause the requested work and guide the user through setup in this chat.
+Do not answer or carry out the original task yet. Only setup questions and the
+profile writer are permitted.
 
 Start onboarding automatically on this very turn, even when the user only asked
 for ordinary work such as creating hello.txt. The missing profile is the trigger;
@@ -40,8 +43,13 @@ Collect the baseline with native interactive option pickers, one question at a
 time. Do not print a questionnaire or substitute a Markdown list when an
 interactive question tool is available.
 
-Use AskUserQuestion with one question per call, a short header, multiSelect=false,
-and options containing label and description.
+Use the host's native interactive question picker with one question per call, a
+short header, and labelled options. In Codex Desktop, call
+request_user_input directly when it is exposed; do not try to invoke it from
+code mode or infer that it is unavailable from a previous failed rendering.
+Treat the picker as unavailable only when no native question tool is exposed in
+the current turn. If it is unavailable, say that the host did not expose a
+picker for this turn and ask only the next choice in chat.
 
 Ask only for choices the user has not already explicitly supplied:
 1. Scope — Where should this baseline apply?
@@ -63,10 +71,9 @@ Ask only for choices the user has not already explicitly supplied:
 Map the selected labels to lowercase profile values. Follow the question tool's
 schema and host requirements for option ordering and recommendations. A
 preselected option is not an answer: wait for the user to submit each choice.
-Never silently choose a scope or accept defaults for them. If no interactive
-question tool is available, explain that limitation briefly and ask only the
-next question in chat; do not dump all four questions at once. If the user
-declines, keep work paused. A session-only profile does not unlock work.
+Never silently choose a scope or accept defaults for them. Do not dump all four
+questions at once. If the user declines, keep work paused. A session-only
+profile does not unlock work.
 
 Once the user has chosen the scope and all three values, run the corresponding
 shell command below, replacing ONLY the three axis values with their choices:

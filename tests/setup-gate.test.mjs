@@ -29,10 +29,17 @@ function fixture(t) {
     assert.ifError(result.error);
     return { ...result, output: result.stdout ? JSON.parse(result.stdout) : undefined };
   };
+  const invokeWithoutWorkspace = (script, payload, args = []) => {
+    const result = spawnSync(process.execPath, [join(ROOT, 'hooks', script), ...args], {
+      cwd: temp, env, input: JSON.stringify(payload), encoding: 'utf8',
+    });
+    assert.ifError(result.error);
+    return { ...result, output: result.stdout ? JSON.parse(result.stdout) : undefined };
+  };
   const gate = (payload) => invoke('require-profile.mjs', payload);
   const tool = (tool_name, tool_input = {}) => gate({ hook_event_name: 'PreToolUse', tool_name, tool_input });
   const write = (path, value) => writeFileSync(path, JSON.stringify(value));
-  return { cwd, home, config, global, project, session, env, gate, tool, invoke, write };
+  return { cwd, home, config, global, project, session, env, gate, tool, invoke, invokeWithoutWorkspace, write };
 }
 
 const denied = (result) => {
@@ -46,13 +53,21 @@ const allowed = (result) => {
 
 test('missing baseline prompts for setup and blocks ordinary tools', (t) => {
   const f = fixture(t);
-  const start = f.invoke(INJECTOR, { source: 'startup' });
-  assert.match(start.output.systemMessage, /setup required/);
-  assert.match(start.output.hookSpecificOutput.additionalContext, /Three Axes setup required/);
+  const start = f.invoke(INJECTOR, { source: 'startup', cwd: f.cwd });
+  assert.match(start.output.systemMessage, /profile required/);
+  assert.match(start.output.hookSpecificOutput.additionalContext, /Three Axes Framework profile required/);
   const prompt = f.gate({ hook_event_name: 'UserPromptSubmit', prompt: 'Build my application' });
-  assert.match(prompt.output.hookSpecificOutput.additionalContext, /Pause the requested/);
+  assert.match(prompt.output.hookSpecificOutput.additionalContext, /Three Axes Framework plugin.*blocking this project chat/s);
   for (const tool of ['Bash', 'Write', 'Read', 'apply_patch', 'Agent', 'mcp__service__send']) denied(f.tool(tool));
   for (const tool of ['AskUserQuestion', 'request_user_input', 'request_user_input_async']) allowed(f.tool(tool));
+});
+
+test('projectless prompts do not receive setup guidance or tool blocks', (t) => {
+  const f = fixture(t);
+  const start = f.invokeWithoutWorkspace(INJECTOR, { source: 'startup' });
+  assert.doesNotMatch(start.output.hookSpecificOutput.additionalContext, /## Three Axes Framework profile required for project work/);
+  allowed(f.invokeWithoutWorkspace('require-profile.mjs', { hook_event_name: 'UserPromptSubmit', prompt: 'Just chat' }));
+  allowed(f.invokeWithoutWorkspace('require-profile.mjs', { hook_event_name: 'PreToolUse', tool_name: 'Bash' }));
 });
 
 test('either persistent scope unlocks work, including partial profiles', (t) => {

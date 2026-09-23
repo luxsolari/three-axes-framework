@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.5.0-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.5.1-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that installs the **Three Axes Framework** — an always-active AI development philosophy that calibrates AI behavior to prevent comprehension debt while maximizing productivity.
 
@@ -64,7 +64,11 @@ claude plugin install three-axes-framework@lux-solari-plugins
 /three-axes-status
 ```
 
-If you start work before configuring a profile, the assistant guides you through setup in chat: choose global or project scope and the three axis values. Project tool calls stay blocked until the profile is saved, then work can resume.
+If you start project work before configuring a profile, the Three Axes Framework
+explicitly identifies itself as the blocker and guides you through setup in chat:
+choose global or project scope and the three axis values. Projectless prompts
+continue normally. Project tool calls stay blocked until the profile is saved,
+then work can resume.
 
 **Need a quick mode change?** Use presets for the current session:
 

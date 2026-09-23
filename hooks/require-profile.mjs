@@ -6,6 +6,9 @@ try {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const input = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  // A missing workspace is a projectless prompt. The profile is a project-work
+  // guardrail, so it must not block that kind of conversation.
+  if (typeof input.cwd !== 'string' || input.cwd.length === 0) process.exit(0);
   const cwd = input.cwd || process.cwd();
   if (hasPersistentProfile(cwd)) {
     if (input.hook_event_name === 'UserPromptSubmit') {
@@ -23,7 +26,7 @@ try {
         hookEventName: 'UserPromptSubmit', additionalContext: setupContext(cwd),
       } };
     } else if (input.hook_event_name === 'PreToolUse') {
-      const questionTools = ['AskUserQuestion', 'request_user_input', 'request_user_input_async'];
+      const questionTools = ['AskUserQuestion', 'request_user_input', 'request_user_input_async', 'functions.request_user_input'];
       const isQuestion = questionTools.includes(input.tool_name);
       const isWriter = input.tool_name === 'Bash'
         && isSetupCommand(input.tool_input?.command, cwd);

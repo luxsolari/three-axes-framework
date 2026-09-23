@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-09-23
+
+### Fixed
+- Made first-run blocking copy name the Three Axes Framework plugin and the
+  missing persistent profile as the cause, rather than leaving the assistant to
+  infer it from generic setup guidance.
+- Skip profile enforcement for hook events without a workspace `cwd`, so
+  projectless prompts are not blocked. The same behavior applies to Claude and
+  Codex packages.
+- Clarified that Codex Desktop must invoke an exposed native question picker
+  directly and only call it unavailable when the host omits it for the turn.
+
 ## [1.5.0] - 2026-09-07
 
 ### Added
