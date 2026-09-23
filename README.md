@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.5.1-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.0-informational.svg)](CHANGELOG.md)
 
 A Claude Code plugin that installs the **Three Axes Framework** — an always-active AI development philosophy that calibrates AI behavior to prevent comprehension debt while maximizing productivity.
 
@@ -20,6 +20,13 @@ Based on where a task sits on these axes, the AI adjusts its six core principles
 Alongside the principles run thirteen **Integrity Rules** — numbered, citable constraints that close the failure modes which erode trust in AI-assisted work: silent scope creep, confident guessing, guess-patch loops, self-certification, and reflexive agreement.
 
 **Core insight:** The tool doesn't destroy understanding. Passive delegation does.
+
+The standard is not line-by-line memorization of generated code or framework
+trivia. It is code the developer could responsibly have authored: they can
+explain the important decisions, control flow, invariants, failure modes, and
+the evidence for its claims without the agent present. The framework keeps that
+human ownership loop visible: `intent → generation → comprehension → challenge
+→ evidence → ownership`.
 
 ## Installation
 
@@ -105,6 +112,8 @@ The framework operates as a background behavioral ruleset that shapes every deve
 - AI presents plans before implementing non-trivial changes
 - AI calibrates explanation depth to your mastery level
 - AI flags comprehension debt accumulation
+- AI treats ownership of generated code as comprehension of the important
+  mechanisms, not recall of incidental API syntax
 - AI steps aside when you want to write code yourself
 - AI enforces readable-over-clever as a universal standard
 - AI holds to the Integrity Rules, and cites them by ID when one is broken
