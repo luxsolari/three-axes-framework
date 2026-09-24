@@ -1,7 +1,9 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.6.0-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.0-informational.svg)](CHANGELOG.md)
+
+[Website](https://luxsolari.github.io/three-axes-framework/) · [Source](https://github.com/luxsolari/three-axes-framework) · [Essay](https://luxsolari.is-a.dev/blog/the-three-axes-framework)
 
 A Claude Code plugin that installs the **Three Axes Framework** — an always-active AI development philosophy that calibrates AI behavior to prevent comprehension debt while maximizing productivity.
 
@@ -72,10 +74,12 @@ claude plugin install three-axes-framework@lux-solari-plugins
 ```
 
 If you start project work before configuring a profile, the Three Axes Framework
-explicitly identifies itself as the blocker and guides you through setup in chat:
-choose global or project scope and the three axis values. Projectless prompts
-continue normally. Project tool calls stay blocked until the profile is saved,
-then work can resume.
+explicitly identifies itself as the blocker only when Claude attempts a local
+project action, then guides you through setup in chat: choose global or project
+scope and the three axis values. Ordinary conversation and tools outside the
+attached workspace continue normally. Workspace reads, writes, patches, and
+commands stay blocked until the profile is saved, then the original action can
+resume.
 
 **Need a quick mode change?** Use presets for the current session:
 
@@ -93,13 +97,13 @@ Or tell Claude directly: *"Walk me through this"*, *"Let me try this"*, *"Just d
 
 Once installed, the framework is **truly always active** via a `SessionStart` hook that fires on every session startup, resume, clear, and compact event. The hook injects the full framework into Claude's context before any conversation begins — no slash command, no keyword trigger, no manual invocation needed.
 
-A `UserPromptSubmit` hook checks persistent configuration on every turn. If
-neither the user-level nor project-level profile is valid, it directs the
-assistant into guided setup. A `PreToolUse` hook denies tool calls except setup
-questions and the dedicated profile writer until a valid baseline is saved.
-This keeps chat available for onboarding while preventing project tool use.
-The hooks must be enabled and trusted by the host; this is a workflow guardrail,
-not a security boundary over tool paths the host does not expose to hooks.
+A `UserPromptSubmit` hook reports the active profile when one exists but does not
+infer project intent from the mere presence of a working directory. A
+`PreToolUse` hook starts guided setup only when an unconfigured session attempts
+a local workspace read, write, patch, or command. Path-aware tools operating
+outside the workspace and clearly external tools continue normally. The hooks
+must be enabled and trusted by the host; this is a workflow guardrail, not a
+security boundary over tool behavior or paths the host does not expose.
 
 A companion skill also loads contextually whenever conversations involve coding, architecture, debugging, or design — providing a second activation path as a fallback.
 
@@ -184,7 +188,7 @@ Tier 3 — Conversational Signals      natural language, no files written, task-
 ## Commands
 
 ### `/three-axes-setup`
-Interactive first-run setup. Asks about each axis and writes your profile to `~/.claude/three-axes-profile.json`. Run this once after installation, or let the first-run hook guide you through global/project setup when you begin work. Unconfigured sessions remain in setup until a valid persistent profile is saved.
+Interactive first-run setup. Asks about each axis and writes your profile to `~/.claude/three-axes-profile.json`. Run this once after installation, or let the first project action guide you through global/project setup. Unconfigured sessions can converse and use non-workspace tools; local project actions pause until a valid persistent profile is saved.
 
 ### `/three-axes-status`
 Shows the resolved profile for the current session, with source label for each axis (`global`, `project`, `session`, or `default`).
@@ -292,8 +296,9 @@ All three files share the same optional-key shape:
 A valid persistent profile is a non-empty JSON object containing only the known
 axes and allowed values. Partial profiles are supported. Empty objects, invalid
 values, malformed JSON, and session-only overrides do not satisfy setup. Invalid
-layers are ignored during resolution. The gate rechecks files before tool calls,
-so deleting the last valid persistent profile pauses work again.
+layers are ignored during resolution. The gate rechecks files before local
+project actions, so deleting the last valid persistent profile pauses the next
+workspace-affecting action without disabling ordinary conversation.
 
 ### Project profiles
 

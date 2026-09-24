@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-09-23
+
+### Added
+- Published a static Lux-Swiss showcase site for GitHub Pages, with responsive
+  light/dark/system themes, technical-vector plates, command references, and an
+  expandable explanation of all thirteen Integrity Rules.
+
+### Changed
+- Moved first-run enforcement from session and prompt presence to the first
+  observable local project action. A host-supplied working directory no longer
+  triggers onboarding by itself.
+- Allow ordinary conversation, external tools, and path-aware operations outside
+  the attached workspace while no persistent profile exists.
+
+### Fixed
+- Aligned the source release workflow with the established
+  `three-axes-framework-v<version>` tag format so tag pushes publish their
+  matching changelog section instead of silently missing the workflow trigger.
+- Keep every SessionStart lifecycle response, including resume and compact,
+  inside the portable `hookSpecificOutput` envelope accepted by both Claude and
+  Codex. Regression coverage now rejects the legacy top-level
+  `additionalContext` shape.
+- Classify built-in file, patch, shell, and Codex tool aliases consistently,
+  including symlink-resolved workspace paths and protected profile targets.
+- Accept the exact validated profile-writer command through both Claude-style
+  `Bash` and Codex-style `exec_command` tool inputs.
+
 ## [1.6.0] - 2026-09-23
 
 ### Added
