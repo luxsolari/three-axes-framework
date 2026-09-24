@@ -21,23 +21,27 @@ export function isSetupCommand(command, cwd) {
 export function setupContext(cwd) {
   const paths = persistentProfilePaths(cwd);
   const example = { mastery: 'medium', consequence: 'medium', intent: 'balanced' };
-  return `## Three Axes Framework profile required for project work
+  return `## Three Axes Framework profile required for this project action
 
-The **Three Axes Framework plugin** is blocking this project chat because no valid
-persistent user-level or project-level profile exists. Tell the user this plainly
-before onboarding: "Three Axes Framework is blocking project work until you save a
-profile." Pause the requested work and guide the user through setup in this chat.
-Do not answer or carry out the original task yet. Only setup questions and the
-profile writer are permitted.
+The **Three Axes Framework plugin** allowed the conversation to proceed, but has
+now blocked a tool call that would read, change, or execute inside the attached
+workspace because no valid persistent user-level or project-level profile exists.
+Tell the user this plainly before onboarding: "Three Axes paused this project
+action because it would access the attached workspace and no persistent baseline
+exists. Ordinary conversation and non-workspace tools remain available. The
+baseline sets default assistance behavior; it is not a claim about your ability
+at every task." Pause this project action and guide the user through setup in
+this chat. Do not carry out the blocked action until setup is saved. Use only
+setup questions and the profile writer while completing this onboarding; do not
+continue the original project task in parallel.
 
-Start onboarding automatically on this very turn, even when the user only asked
-for ordinary work such as creating hello.txt. The missing profile is the trigger;
-do not wait for a setup command, permission to begin onboarding, or a request to
-use the interactive tool. If a question tool is available, your first action must
-be calling it for the first unanswered choice below. Do not end the turn with a
-text-only setup invitation. After each submitted answer, immediately ask the next
-unanswered choice; after all choices are submitted, save and resume the original
-request without requiring the user to repeat it.
+Start onboarding automatically on this very turn. The blocked project action is
+the trigger; do not wait for a setup command, permission to begin onboarding, or
+a request to use the interactive tool. If a question tool is available, your
+first action must be calling it for the first unanswered choice below. Do not end
+the turn with a text-only setup invitation. After each submitted answer,
+immediately ask the next unanswered choice; after all choices are submitted,
+save and resume the original request without requiring the user to repeat it.
 
 Collect the baseline with native interactive option pickers, one question at a
 time. Do not print a questionnaire or substitute a Markdown list when an
@@ -51,19 +55,27 @@ Treat the picker as unavailable only when no native question tool is exposed in
 the current turn. If it is unavailable, say that the host did not expose a
 picker for this turn and ask only the next choice in chat.
 
-Ask only for choices the user has not already explicitly supplied:
-1. Scope — Where should this baseline apply?
-   - Project: This repository only. Save as project scope.
-   - Global: All projects for this user. Save as global scope.
-2. Mastery — How familiar are you with this work?
-   - Low: Learning the domain; guide and teach.
-   - Medium: Familiar, but still building deeper understanding.
-   - High: Experienced; provide concise assistance.
-3. Consequence — What is the impact of a mistake?
-   - Low: Experiments or disposable work.
-   - Medium: Shared tools or maintained projects.
-   - High: Production, user data, or other costly failures.
-4. Intent — What should assistance prioritize?
+Ask only for choices the user has not already explicitly supplied. The three
+axes are assistance defaults, not universal claims about the user's skill or all
+future work. After scope is chosen, use the matching scope-specific wording:
+1. Scope — Where should this fallback baseline live?
+   - Project: This repository only. Use it for work in this workspace.
+   - Global: Across sessions. Use it only when no project profile overrides it.
+2. Mastery
+   - Global question: When no project profile exists, how much prior understanding should I assume?
+   - Project question: For this repository's domain and tools, how much prior understanding should I assume?
+   - Low: Assume I am learning this area; teach and leave room for me to try.
+   - Medium: Assume working familiarity; explain non-obvious decisions.
+   - High: Assume I can critically review the work; keep explanations concise.
+3. Consequence
+   - Global question: When no project profile exists, what risk level should I assume?
+   - Project question: If work in this repository goes wrong, what is the typical impact?
+   - Low: A mistake is cheap to discard or undo.
+   - Medium: The work is maintained, shared, or portfolio-grade.
+   - High: Failure could affect production, money, user data, or professional delivery.
+4. Intent
+   - Global question: By default, what should assistance optimize for?
+   - Project question: For work in this repository, what should assistance optimize for?
    - Growth: Learning and hands-on practice.
    - Balanced: Both understanding and delivery.
    - Output: Delivering the requested result efficiently.

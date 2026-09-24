@@ -28,15 +28,18 @@ For generated work, keep the human in the epistemic loop:
 
 ## First-run setup gate
 
-Before project work, a valid persistent user or project profile is required.
-When the lifecycle hook reports setup is required, pause the original request,
+Before a local project action, a valid persistent user or project profile is
+required. Ordinary conversation and tools that do not access the attached
+workspace remain available without one. When the lifecycle hook blocks a
+project action and reports setup is required, pause the original request,
 collect global/project scope and the three axis values with native interactive
 option pickers, one question at a time when available, and use the
 profile-writer command supplied by that hook. Question tools and that writer are
-the only permitted tool calls until a profile is saved. Do not silently accept
-defaults or use a session preset to bypass setup. Once saved, resume the original
-request. A valid partial persistent profile counts; omitted axes inherit defaults.
-Empty, malformed, non-object, or invalid profiles do not count.
+the only tools to use while completing onboarding; unrelated conversation and
+non-workspace tools are not globally disabled. Do not silently accept defaults
+or use a session preset to bypass setup. Once saved, resume the original request.
+A valid partial persistent profile counts; omitted axes inherit defaults. Empty,
+malformed, non-object, or invalid profiles do not count.
 
 ## Interaction Model
 

@@ -10,12 +10,10 @@ import { readFileSync, unlinkSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   globalProfilePath,
-  hasPersistentProfile,
   projectProfilePath,
   sessionProfilePath,
   resolveProfile,
 } from './lib/profile.mjs';
-import { setupContext } from './lib/setup.mjs';
 
 const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
 if (!pluginRoot) process.exit(0);
@@ -23,13 +21,11 @@ if (!pluginRoot) process.exit(0);
 // --- Read event type from stdin ---
 let sessionEvent = 'startup';
 let cwd = process.cwd();
-let hasWorkspace = false;
 try {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const input = JSON.parse(Buffer.concat(chunks).toString('utf8'));
   // source is the host field; keep the older aliases for compatibility.
-  hasWorkspace = typeof input.cwd === 'string' && input.cwd.length > 0;
   cwd = input.cwd || cwd;
   sessionEvent = input.source ?? input.session_event ?? input.trigger ?? input.event ?? 'startup';
 } catch { /* default to startup — safe: wipes session, never skips injection */ }
@@ -62,13 +58,12 @@ const axisLines = Object.entries(values)
 const axisContext = `## Active Profile\n\n${axisLines}`;
 
 // --- Output ---
-const configured = hasWorkspace && hasPersistentProfile(cwd);
 const output = {
   suppressOutput: true,
-  systemMessage: hasWorkspace && !configured ? 'Three Axes Framework profile required for project work.' : 'Three Axes Framework active.',
+  systemMessage: 'Three Axes Framework active.',
   hookSpecificOutput: {
     hookEventName: 'SessionStart',
-    additionalContext: `${frameworkBody}\n\n${axisContext}${hasWorkspace && !configured ? `\n\n${setupContext(cwd)}` : ''}`,
+    additionalContext: `${frameworkBody}\n\n${axisContext}`,
   },
 };
 

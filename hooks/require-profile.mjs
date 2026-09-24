@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { activeProfile, hasPersistentProfile } from './lib/profile.mjs';
+import { persistentProfilePaths } from './lib/profile.mjs';
+import { isProjectAction, isShellTool, shellCommand } from './lib/project-action.mjs';
 import { isSetupCommand, setupContext } from './lib/setup.mjs';
 
 try {
@@ -21,22 +23,19 @@ try {
     }
   } else {
     let output;
-    if (input.hook_event_name === 'UserPromptSubmit') {
-      output = { hookSpecificOutput: {
-        hookEventName: 'UserPromptSubmit', additionalContext: setupContext(cwd),
-      } };
-    } else if (input.hook_event_name === 'PreToolUse') {
+    if (input.hook_event_name === 'PreToolUse') {
       const questionTools = ['AskUserQuestion', 'request_user_input', 'request_user_input_async', 'functions.request_user_input'];
       const isQuestion = questionTools.includes(input.tool_name);
-      const isWriter = input.tool_name === 'Bash'
-        && isSetupCommand(input.tool_input?.command, cwd);
-      if (!isQuestion && !isWriter) {
+      const isWriter = isShellTool(input.tool_name)
+        && isSetupCommand(shellCommand(input), cwd);
+      const protectedPaths = Object.values(persistentProfilePaths(cwd));
+      if (!isQuestion && !isWriter && isProjectAction(input, cwd, protectedPaths)) {
         output = { hookSpecificOutput: {
           hookEventName: 'PreToolUse', permissionDecision: 'deny',
           permissionDecisionReason: setupContext(cwd),
         } };
       }
-    } else {
+    } else if (input.hook_event_name !== 'UserPromptSubmit') {
       throw new Error('Unsupported profile-gate event.');
     }
     if (output) process.stdout.write(`${JSON.stringify(output)}\n`);

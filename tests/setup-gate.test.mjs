@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,9 +14,11 @@ function fixture(t) {
   const temp = mkdtempSync(join(tmpdir(), 'three-axes-gate-'));
   t.after(() => rmSync(temp, { recursive: true, force: true }));
   const cwd = join(temp, "project with 'quotes'");
+  const outside = join(temp, 'outside');
   const home = join(temp, 'home');
   const config = join(home, CODEX ? 'custom-codex' : '.claude');
   mkdirSync(cwd, { recursive: true });
+  mkdirSync(outside, { recursive: true });
   mkdirSync(config, { recursive: true });
   const env = { ...process.env, HOME: home, USERPROFILE: home, CODEX_HOME: config, CLAUDE_PLUGIN_ROOT: ROOT };
   const global = join(config, 'three-axes-profile.json');
@@ -39,7 +41,7 @@ function fixture(t) {
   const gate = (payload) => invoke('require-profile.mjs', payload);
   const tool = (tool_name, tool_input = {}) => gate({ hook_event_name: 'PreToolUse', tool_name, tool_input });
   const write = (path, value) => writeFileSync(path, JSON.stringify(value));
-  return { cwd, home, config, global, project, session, env, gate, tool, invoke, invokeWithoutWorkspace, write };
+  return { cwd, outside, home, config, global, project, session, env, gate, tool, invoke, invokeWithoutWorkspace, write };
 }
 
 const denied = (result) => {
@@ -51,21 +53,52 @@ const allowed = (result) => {
   assert.equal(result.output, undefined);
 };
 
-test('missing baseline prompts for setup and blocks ordinary tools', (t) => {
+test('missing baseline stays conversational until a project action is attempted', (t) => {
   const f = fixture(t);
   const start = f.invoke(INJECTOR, { source: 'startup', cwd: f.cwd });
-  assert.match(start.output.systemMessage, /profile required/);
-  assert.match(start.output.hookSpecificOutput.additionalContext, /Three Axes Framework profile required/);
+  assert.equal(start.output.systemMessage, 'Three Axes Framework active.');
+  assert.doesNotMatch(start.output.hookSpecificOutput.additionalContext, /Three Axes Framework profile required/);
   const prompt = f.gate({ hook_event_name: 'UserPromptSubmit', prompt: 'Build my application' });
-  assert.match(prompt.output.hookSpecificOutput.additionalContext, /Three Axes Framework plugin.*blocking this project chat/s);
-  for (const tool of ['Bash', 'Write', 'Read', 'apply_patch', 'Agent', 'mcp__service__send']) denied(f.tool(tool));
-  for (const tool of ['AskUserQuestion', 'request_user_input', 'request_user_input_async']) allowed(f.tool(tool));
+  allowed(prompt);
+
+  denied(f.tool('Bash', { command: 'pwd' }));
+  denied(f.tool('Write', { file_path: join(f.cwd, 'app.js') }));
+  denied(f.tool('Read', { file_path: join(f.cwd, 'README.md') }));
+  denied(f.tool('apply_patch', { patch: '*** Begin Patch' }));
+  denied(f.tool('functions.exec_command', { cmd: 'pwd', workdir: f.cwd }));
+  denied(f.tool('view_image', { path: join(f.cwd, 'diagram.png') }));
+  denied(f.tool('Glob'));
+  denied(f.tool('write_stdin', { session_id: 123, chars: 'continue\n' }));
+
+  for (const tool of ['AskUserQuestion', 'request_user_input', 'request_user_input_async', 'functions.request_user_input', 'Agent', 'WebSearch', 'WebFetch', 'imagegen', 'mcp__service__send']) {
+    allowed(f.tool(tool));
+  }
+});
+
+test('project action detection is path-aware and protects profile targets', (t) => {
+  const f = fixture(t);
+  allowed(f.tool('Read', { file_path: join(f.outside, 'notes.txt') }));
+  allowed(f.tool('Write', { file_path: join(f.outside, 'artifact.txt') }));
+  allowed(f.tool('functions.exec_command', { cmd: 'pwd', workdir: f.outside }));
+  allowed(f.tool('view_image', { path: join(f.outside, 'reference.png') }));
+  allowed(f.tool('mcp__service__read', { path: 'remote/document/123' }));
+  allowed(f.tool('mcp__filesystem__read_file', { path: join(f.outside, 'notes.txt') }));
+
+  denied(f.tool('Write', { file_path: f.global }));
+  denied(f.tool('Read', { file_path: join(f.cwd, '..cache') }));
+  denied(f.tool('mcp__filesystem__read_file', { path: join(f.cwd, 'README.md') }));
+  denied(f.tool('mcp__filesystem__read_files', { paths: [join(f.outside, 'one'), join(f.cwd, 'two')] }));
+  denied(f.tool('functions.exec_command', { cmd: `git -C ${f.cwd} status`, workdir: f.outside }));
+
+  const alias = join(f.outside, 'project-alias');
+  symlinkSync(f.cwd, alias, 'dir');
+  denied(f.tool('Read', { file_path: join(alias, 'README.md') }));
 });
 
 test('projectless prompts do not receive setup guidance or tool blocks', (t) => {
   const f = fixture(t);
   const start = f.invokeWithoutWorkspace(INJECTOR, { source: 'startup' });
-  assert.doesNotMatch(start.output.hookSpecificOutput.additionalContext, /## Three Axes Framework profile required for project work/);
+  assert.doesNotMatch(start.output.hookSpecificOutput.additionalContext, /## Three Axes Framework profile required/);
   allowed(f.invokeWithoutWorkspace('require-profile.mjs', { hook_event_name: 'UserPromptSubmit', prompt: 'Just chat' }));
   allowed(f.invokeWithoutWorkspace('require-profile.mjs', { hook_event_name: 'PreToolUse', tool_name: 'Bash' }));
 });
@@ -97,9 +130,14 @@ test('empty, malformed, non-object, and invalid profiles do not unlock work', (t
 
 test('setup writer is allowed only for exact commands and approved paths', (t) => {
   const f = fixture(t);
-  const context = f.gate({ hook_event_name: 'UserPromptSubmit' }).output.hookSpecificOutput.additionalContext;
+  const context = f.tool('Bash', { command: 'pwd' }).output.hookSpecificOutput.permissionDecisionReason;
+  assert.match(context, /allowed the conversation to proceed/);
+  assert.match(context, /assistance defaults, not universal claims/);
+  assert.match(context, /When no project profile exists, how much prior understanding should I assume\?/);
+  assert.match(context, /For this repository's domain and tools, how much prior understanding should I assume\?/);
   const command = context.match(/^Project: (.+)$/m)[1];
   allowed(f.tool('Bash', { command }));
+  allowed(f.tool('functions.exec_command', { cmd: command, workdir: f.cwd }));
   for (const bad of [command + '; touch /tmp/unrelated', command + '\necho extra', command.replace('mastery=medium', 'mastery=expert'), command.replace('.three-axes.json', 'unrelated.json')]) {
     denied(f.tool('Bash', { command: bad }));
   }
@@ -135,6 +173,19 @@ test('documented source field preserves session settings except on startup', (t)
   }
 });
 
+test('every session lifecycle source uses the portable SessionStart envelope', (t) => {
+  const f = fixture(t);
+  for (const source of ['startup', 'resume', 'clear', 'compact']) {
+    const result = f.invoke(INJECTOR, { source });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(Object.keys(result.output).sort(), ['hookSpecificOutput', 'suppressOutput', 'systemMessage']);
+    assert.equal(result.output.additionalContext, undefined);
+    assert.deepEqual(Object.keys(result.output.hookSpecificOutput).sort(), ['additionalContext', 'hookEventName']);
+    assert.equal(result.output.hookSpecificOutput.hookEventName, 'SessionStart');
+    assert.equal(typeof result.output.hookSpecificOutput.additionalContext, 'string');
+  }
+});
+
 test('project lookup uses the hook cwd and discovers a git root from subdirectories', (t) => {
   const f = fixture(t);
   assert.equal(spawnSync('git', ['init', '-q', f.cwd]).status, 0);
@@ -161,7 +212,7 @@ if (CODEX) test('Codex accepts a valid legacy global profile only when its own i
 
 test('global onboarding creates the selected baseline and reports its values', (t) => {
   const f = fixture(t);
-  const context = f.gate({ hook_event_name: 'UserPromptSubmit' }).output.hookSpecificOutput.additionalContext;
+  const context = f.tool('apply_patch').output.hookSpecificOutput.permissionDecisionReason;
   const command = context.match(/^Global: (.+)$/m)[1].replace('mastery=medium', 'mastery=low').replace('intent=balanced', 'intent=growth');
   allowed(f.tool('Bash', { command }));
   const written = spawnSync(command, { shell: true, env: f.env, cwd: f.cwd, encoding: 'utf8' });

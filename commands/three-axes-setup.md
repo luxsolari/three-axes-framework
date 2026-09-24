@@ -6,34 +6,35 @@ Guide me through setting up my Three Axes Framework profile.
 
 If the hook reports that the first-run setup gate is active, follow its guided
 setup instructions first: ask for global or project scope and the three values,
-then run its exact profile-writer command. The Write tool is blocked until setup
-is saved. Use the six-principle confirmation below after saving. Otherwise,
+then run its exact profile-writer command. Workspace-affecting tools remain
+blocked until setup is saved; conversation and non-workspace tools remain
+available. Use the six-principle confirmation below after saving. Otherwise,
 follow these steps to reconfigure the global profile:
 
-1. Say in one sentence: "I'll ask you three quick questions to set your AI behavior baseline — you can change it anytime."
+1. Say in one sentence: "I'll ask three quick questions to set the fallback behavior I should use when no project profile overrides it — this describes how I assist, not your ability at every task."
 
 2. Use the `AskUserQuestion` tool with exactly these three questions in a single call:
 
    Question 1:
-   - question: "How would you describe your general mastery level across most projects?"
+   - question: "When no project profile exists, how much prior understanding should I assume?"
    - header: "Mastery"
    - multiSelect: false
    - options:
-     - label: "Low", description: "Actively learning — every struggle is valuable, AI mentors rather than solves"
-     - label: "Medium (Recommended)", description: "Conversationally fluent — building deeper intuition, AI explains more"
-     - label: "High", description: "Expert — you can critically review AI-generated code, AI accelerates you"
+     - label: "Low", description: "Assume I am learning this area; teach and leave room for me to try"
+     - label: "Medium (Recommended)", description: "Assume working familiarity; explain non-obvious decisions"
+     - label: "High", description: "Assume I can critically review the work; keep explanations concise"
 
    Question 2:
-   - question: "What's the typical consequence level of the work you do?"
+   - question: "When no project profile exists, what risk level should I assume?"
    - header: "Consequence"
    - multiSelect: false
    - options:
-     - label: "Low", description: "Personal experiments, throwaway scripts, learning exercises"
-     - label: "Medium (Recommended)", description: "Shared tools, libraries, portfolio-grade projects"
-     - label: "High", description: "Production systems, money, user data, professional deliverables"
+     - label: "Low", description: "A mistake is cheap to discard or undo"
+     - label: "Medium (Recommended)", description: "The work is maintained, shared, or portfolio-grade"
+     - label: "High", description: "Failure could affect production, money, user data, or professional delivery"
 
    Question 3:
-   - question: "What's your primary intent when working with AI?"
+   - question: "By default, what should assistance optimize for?"
    - header: "Intent"
    - multiSelect: false
    - options:
