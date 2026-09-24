@@ -198,7 +198,7 @@ Multiple axes can be set in one command. A scope flag applies to all axes in the
 | `CHANGELOG.md` | Keep a Changelog format. Sections: `[Unreleased]`, `[1.1.0]`, `[1.0.0]`. Each release entry uses Added / Changed / Fixed subsections. |
 | `CONTRIBUTING.md` | Sections: How to report issues (GitHub Issues), How to propose changes (fork → branch → PR), Local testing (install from local directory via `claude plugin add --local`), Commit convention (Conventional Commits). Tone: concise, welcoming. |
 | `LICENSE` | Standard MIT license. Author: Lux Solari. Year: 2026. |
-| `docs/superpowers/specs/2026-03-19-three-axes-commands-design.md` | This document |
+| `project-notes/superpowers/specs/2026-03-19-three-axes-commands-design.md` | This document |
 
 ### Updated files
 

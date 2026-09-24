@@ -8,7 +8,7 @@
 
 **Tech Stack:** Node.js ESM (`node:fs`, `node:os`, `node:path`, `node:child_process`), Node.js built-in test runner (`node:test`), Claude Code plugin commands (markdown), JSON profiles.
 
-**Spec:** `docs/superpowers/specs/2026-03-19-three-axes-commands-design.md`
+**Spec:** `project-notes/superpowers/specs/2026-03-19-three-axes-commands-design.md`
 
 ---
 

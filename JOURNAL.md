@@ -1,5 +1,22 @@
 # Journal
 
+## 2026-09-23 - GitHub Pages source aligned with design-system repositories
+
+- Moved the static showcase from `site/` to `docs/` on `main` so its publishing
+  source matches Lux Swiss and Tri-Swiss.
+- Preserved the pre-existing design notes by moving `docs/superpowers/` to
+  `project-notes/superpowers/`; the publishing folder now contains only the
+  website.
+- Configured GitHub Pages to deploy from `main` / `docs` while retaining the
+  public URL `https://luxsolari.github.io/three-axes-framework/`.
+- Verified the local document paths and static asset references before changing
+  the Pages source. Live-deployment verification and retirement of the old
+  `gh-pages` branch are pending until the pushed `main` deployment completes.
+- Ruled out repository exposure as a concern: Pages serves only the selected
+  publishing folder, not the repository tree.
+- Relevant files: `docs/index.html`, `docs/styles.css`, `docs/script.js`,
+  `docs/assets/*.webp`, and `project-notes/superpowers/`.
+
 ## 2026-09-23 - Three Axes v1.7.0 release and public site
 
 - Released the action-boundary profile gate, clarified scope-aware setup copy,
