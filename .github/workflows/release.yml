@@ -3,11 +3,11 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "three-axes-framework-v*.*.*"
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing tag to (re)publish a release for, e.g. v1.4.1"
+        description: "Existing tag to (re)publish, e.g. three-axes-framework-v1.7.0"
         required: true
 
 permissions:
@@ -29,9 +29,11 @@ jobs:
           else
             echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
           fi
+          TAG=$(grep '^tag=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)
+          echo "version=${TAG##*-v}" >> "$GITHUB_OUTPUT"
 
       - name: Extract changelog section
-        run: python3 scripts/extract_changelog.py "${{ steps.resolve.outputs.tag }}" > release_notes.md
+        run: python3 scripts/extract_changelog.py "${{ steps.resolve.outputs.version }}" > release_notes.md
 
       - name: Create or update release
         env:
