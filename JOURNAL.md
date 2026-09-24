@@ -1,5 +1,28 @@
 # Journal
 
+## 2026-09-23 - Three Axes v1.7.0 release and public site
+
+- Released the action-boundary profile gate, clarified scope-aware setup copy,
+  and added lifecycle regression coverage for the portable SessionStart output
+  envelope.
+- Added and published the Lux-Swiss showcase site from the `gh-pages` branch at
+  `https://luxsolari.github.io/three-axes-framework/`; linked it from README and
+  kept the deployment static with `.nojekyll` and relative assets.
+- Corrected the source release workflow to listen for the established
+  `three-axes-framework-v<version>` tags and extract the version component before
+  reading the changelog.
+- Verified 44 source tests, the Claude plugin validator, release-note extraction,
+  workflow YAML parsing, and `git diff --check`. GitHub's source Release workflow
+  completed successfully, and the published site returned HTTP 200 with all hero
+  assets visible in the browser.
+- Published: source commit `69e9ffc`, tag `three-axes-framework-v1.7.0`, and
+  GitHub Release. The matching Codex marketplace release and validation also
+  completed successfully.
+- Open: blog integration is intentionally left to the blog repository; this site
+  now provides the stable public URL it can link to.
+- Relevant files: `site/`, `.github/workflows/release.yml`, `CHANGELOG.md`,
+  `.claude-plugin/plugin.json`, and `README.md`.
+
 ## 2026-09-23 - SessionStart resume compatibility
 
 - Traced Codex's `invalid session start JSON output` notice to a second,
