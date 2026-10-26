@@ -1,5 +1,17 @@
 # Journal
 
+## 2026-10-26 — prepare authorized lockstep 1.7.3 release
+
+- User explicitly requested merging upstream PR 8 and publishing both editions as 1.7.3 before advancing the marketplace PRs. The fix-only commits since three-axes-framework-v1.7.2 derive a patch bump matching that requested version. Updated canonical manifest, README badge and changelog section in this same PR; retained native fixes and tests.
+- Existing release workflow/tag scheme is reused. Prior tags/assets remain immutable; Supporter follows this exact released source through its existing checked draft/publish workflow. No independent supporter version is derived.
+- Pending: exact-head CI after metadata update, normal protected merge, signed tag and workflow publication/readback. Required approving GitHub review may need owner action; no new admin exception has been authorized for PR 8. Marketplace PRs remain unmerged. Files: .claude-plugin/plugin.json; CHANGELOG.md; README.md; JOURNAL.md.
+
+## 2026-10-26 — Windows onboarding final audit and CI evidence
+
+- Canonical source PR 8 at 9c0552329f00d8b8d46fa04e07ad9f69af8b1b35 carries the Windows PowerShell quoting and macOS path-alias fixes. The original lifecycle regression is retained; no previous source test was removed. Host-specific question guidance is preserved.
+- Verified all 64 tests on native Windows Node 24. Hosted CI 40389162916 passed the complete original suite and Linux/Windows/macOS Node 20 onboarding jobs, including actual Windows PowerShell 5.1/7 execution with literal quoted paths. Cross-host audit confirms canonical and Codex quoting mechanisms and project-action modules match. No further focused code issue found.
+- Remaining: one approving human review is required by active main ruleset 18443106; PR state REVIEW_REQUIRED/BLOCKED at readback. No merge exception was requested or used. Manifest remains 1.7.2 with changes under Unreleased; immutable released 1.7.2 is unchanged. Claude's catalog pin cannot receive this fix until a subsequent published open patch, whose Supporter version must match. No new product release authorized or published. Files: setup/project-action helpers, setup-gate tests, CI matrix, README/CHANGELOG/JOURNAL. Final observation local/uncommitted.
+
 ## 2026-10-26 — prepare native Windows onboarding and macOS path fixes
 
 - User requested repair of Windows onboarding quoting failures before marketplace merges. Canonical helper always emitted POSIX quoting; Windows supports native PowerShell in Claude as well as Codex. Emit shell-specific literal arguments, pin the running Node executable and explicitly name PowerShell on Windows. Preserve each host's onboarding/question guidance.
