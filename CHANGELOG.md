@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-10-25
+
+### Fixed
+- Clarify that execution-check reports identify the checked source and working-tree
+  context; a committed-only source review does not establish command execution state.
+
 ## [1.7.0] - 2026-09-23
 
 ### Added
