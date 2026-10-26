@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.7.1-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.2-informational.svg)](CHANGELOG.md)
 
 [Website](https://luxsolari.github.io/three-axes-framework/) · [Source](https://github.com/luxsolari/three-axes-framework) · [Essay](https://luxsolari.is-a.dev/blog/the-three-axes-framework)
 
@@ -106,6 +106,8 @@ must be enabled and trusted by the host; this is a workflow guardrail, not a
 security boundary over tool behavior or paths the host does not expose.
 
 A companion skill also loads contextually whenever conversations involve coding, architecture, debugging, or design — providing a second activation path as a fallback.
+
+The skill identifier remains `three-axes-framework`. Installation display labels do not rename the skill or its command namespace.
 
 > **Context window cost:** The hook injects approximately **~3,550 tokens** per session (the framework rules, the Integrity Rules, and your active profile). This is a one-time cost paid at session start — it does not grow during the conversation. That is up from ~2,400 in 1.2.1; the Integrity Rules, precedence notes and recovery signals account for the difference. On a 200k-token context window it is roughly 1.7% overhead.
 >

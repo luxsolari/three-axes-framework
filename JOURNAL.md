@@ -1,5 +1,31 @@
 # Journal
 
+## 2026-10-26 - Prepare 1.7.2 stable invocation identity clarification
+
+- Clarified the existing three-axes-framework skill identity independently of installation display labels; native command, profile and hook code are unchanged.
+- Prepared manifest, README badge and changelog 1.7.2 under the existing three-axes-framework-v<version> tag scheme. Existing release workflow is reused.
+- User explicitly requested 1.7.2 publication. CI, protected-branch merge and signed tag/release verification remain pending; no old tag or asset is replaced.
+- Files: .claude-plugin/plugin.json; README.md; CHANGELOG.md; JOURNAL.md.
+
+## 2026-10-25 - Publish 1.7.1 after verification
+
+- Merged documentation-only PR #6 at b00c72a6652de0b5db2745a1597c906d437d43a4.
+  The owner explicitly authorized a scoped admin merge after green CI and audit;
+  repository protection settings were not changed and still require one approval.
+- The merge tree matches audited head 12906a7ff17dda75a099444a771b1c07b879cd79.
+  CI passed 18 profile tests and 44 structure/setup tests. Post-merge CI run
+  40258908791 also passed; native profile/hook code remains unchanged.
+- Signed and pushed three-axes-framework-v1.7.1 without replacing an old tag.
+  Remote annotation 5cd9a76bf0c5859b8fb967e5182ad164965e172e points to the merge
+  commit and GitHub reports a valid verified signature. Release run 40258943792
+  succeeded and the published release/manifest/README/changelog identify 1.7.1.
+- Existing 1.7.0 tag annotation c2c00e4d9d650170c697cd58dc1cea0bee0ae180
+  was preserved. No public runtime or profile changes were added during release.
+- Evidence: https://github.com/luxsolari/three-axes-framework/releases/tag/three-axes-framework-v1.7.1
+- Open: no new implementation finding reproduced in the release audit. This local
+  observation is written after the immutable release commit; no retag is needed.
+
+
 ## 2026-10-25 - Prepare 1.7.1 verification-scope clarification
 
 - Clarified IR-08 so execution-check reports name the source revision/checkout
