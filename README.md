@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.7.2-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.3-informational.svg)](CHANGELOG.md)
 
 [Website](https://luxsolari.github.io/three-axes-framework/) · [Source](https://github.com/luxsolari/three-axes-framework) · [Essay](https://luxsolari.is-a.dev/blog/the-three-axes-framework)
 
@@ -358,3 +358,7 @@ This redirects all SSH clone attempts to HTTPS. Useful for WSL, Docker, or CI en
 
 ## License
 MIT — free to use, fork, and adapt.
+
+Windows onboarding commands emitted by the profile gate require the native
+PowerShell tool; Bash/POSIX commands are emitted on Linux and macOS. Preserve
+the literal executable/path quoting and replace only the chosen axis values.

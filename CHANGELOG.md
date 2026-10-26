@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.3] - 2026-10-26
+
+### Fixed
+- Generate literal PowerShell onboarding commands on Windows and POSIX commands elsewhere, including quoted installation/profile paths and the running Node executable.
+- Preserve both workspace path spellings and their resolved locations in outside-workspace shell checks (including macOS /var aliases).
+
 ## [1.7.2] - 2026-10-26
 
 ### Fixed

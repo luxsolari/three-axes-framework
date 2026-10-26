@@ -122,7 +122,10 @@ export function isProjectAction(input, cwd, protectedPaths = []) {
     if (isWithin(cwd, workdir)) return true;
 
     const command = commandText(toolInput);
-    const protectedRoots = [cwd, ...protectedPaths].map(canonicalPath);
+    // A command can use either the caller's path spelling or its realpath
+    // (for example /var and /private/var on macOS).
+    const protectedRoots = [cwd, ...protectedPaths]
+      .flatMap((path) => [resolve(path), canonicalPath(path)]);
     return protectedRoots.some((path) => command.includes(path));
   }
 
