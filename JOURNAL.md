@@ -1,5 +1,13 @@
 # Journal
 
+## 2026-10-26 — prepare native Windows onboarding and macOS path fixes
+
+- User requested repair of Windows onboarding quoting failures before marketplace merges. Canonical helper always emitted POSIX quoting; Windows supports native PowerShell in Claude as well as Codex. Emit shell-specific literal arguments, pin the running Node executable and explicitly name PowerShell on Windows. Preserve each host's onboarding/question guidance.
+- Audit exposed a macOS realpath alias mismatch: shell text may contain the hook cwd /var spelling while the gate matched only /private/var. Compare both original resolved and realpath spellings; test commands via a directory alias from an outside workdir.
+- Add actual Windows PowerShell 5.1/7 command execution with apostrophes, smart single quotes, substitutions/separators and Unicode in installation/profile paths. Initialize disposable Git projects, and use Windows junctions to retain alias-boundary coverage without symlink privilege. Add Node 20 onboarding CI on Linux/Windows/macOS alongside the original full suite.
+- Pending: local canonical suite, exact-head hosted checks and follow-up audit. No live profiles, permissions, user installation or published version/tag/asset changed. Version remains 1.7.2 with fixes under Unreleased; Claude's marketplace pin cannot obtain these changes until a later published open patch. No 1.7.3 publication is authorized by this source PR alone.
+- Files: hooks/lib/{setup,project-action}.mjs; tests/setup-gate.test.mjs; .github/workflows/ci.yml; CHANGELOG.md; JOURNAL.md.
+
 ## 2026-10-26 - Prepare 1.7.2 stable invocation identity clarification
 
 - Clarified the existing three-axes-framework skill identity independently of installation display labels; native command, profile and hook code are unchanged.

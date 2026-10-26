@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from 'node:fs';
+import { cpSync, mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,29 +10,32 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CODEX = existsSync(join(ROOT, '.codex-plugin'));
 const INJECTOR = CODEX ? 'inject-framework-codex.mjs' : 'inject-framework.mjs';
 
-function fixture(t) {
+function fixture(t, { pluginRoot = ROOT, projectName = "project with 'quotes'" } = {}) {
   const temp = mkdtempSync(join(tmpdir(), 'three-axes-gate-'));
   t.after(() => rmSync(temp, { recursive: true, force: true }));
-  const cwd = join(temp, "project with 'quotes'");
+  const cwd = join(temp, projectName);
   const outside = join(temp, 'outside');
   const home = join(temp, 'home');
   const config = join(home, CODEX ? 'custom-codex' : '.claude');
   mkdirSync(cwd, { recursive: true });
   mkdirSync(outside, { recursive: true });
   mkdirSync(config, { recursive: true });
-  const env = { ...process.env, HOME: home, USERPROFILE: home, CODEX_HOME: config, CLAUDE_PLUGIN_ROOT: ROOT };
+  const env = { ...process.env, HOME: home, USERPROFILE: home, CODEX_HOME: config, CLAUDE_PLUGIN_ROOT: pluginRoot };
+  // Fixtures stay independent of an enclosing checkout when TEMP is customized.
+  const initialized = spawnSync('git', ['init', '-q', cwd], { env, encoding: 'utf8' });
+  assert.equal(initialized.status, 0, initialized.stderr);
   const global = join(config, 'three-axes-profile.json');
   const project = join(cwd, '.three-axes.json');
   const session = join(config, 'three-axes-session.json');
   const invoke = (script, payload, args = []) => {
-    const result = spawnSync(process.execPath, [join(ROOT, 'hooks', script), ...args], {
+    const result = spawnSync(process.execPath, [join(pluginRoot, 'hooks', script), ...args], {
       cwd: temp, env, input: JSON.stringify({ cwd, ...payload }), encoding: 'utf8',
     });
     assert.ifError(result.error);
     return { ...result, output: result.stdout ? JSON.parse(result.stdout) : undefined };
   };
   const invokeWithoutWorkspace = (script, payload, args = []) => {
-    const result = spawnSync(process.execPath, [join(ROOT, 'hooks', script), ...args], {
+    const result = spawnSync(process.execPath, [join(pluginRoot, 'hooks', script), ...args], {
       cwd: temp, env, input: JSON.stringify(payload), encoding: 'utf8',
     });
     assert.ifError(result.error);
@@ -42,6 +45,14 @@ function fixture(t) {
   const tool = (tool_name, tool_input = {}) => gate({ hook_event_name: 'PreToolUse', tool_name, tool_input });
   const write = (path, value) => writeFileSync(path, JSON.stringify(value));
   return { cwd, outside, home, config, global, project, session, env, gate, tool, invoke, invokeWithoutWorkspace, write };
+}
+
+function executeSetup(command, f, powershell = 'powershell.exe') {
+  return process.platform === 'win32'
+    ? spawnSync(powershell, ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', command], {
+      env: f.env, cwd: f.cwd, encoding: 'utf8', windowsHide: true,
+    })
+    : spawnSync('/bin/sh', ['-c', command], { env: f.env, cwd: f.cwd, encoding: 'utf8' });
 }
 
 const denied = (result) => {
@@ -91,8 +102,12 @@ test('project action detection is path-aware and protects profile targets', (t) 
   denied(f.tool('functions.exec_command', { cmd: `git -C ${f.cwd} status`, workdir: f.outside }));
 
   const alias = join(f.outside, 'project-alias');
-  symlinkSync(f.cwd, alias, 'dir');
+  symlinkSync(f.cwd, alias, process.platform === 'win32' ? 'junction' : 'dir');
   denied(f.tool('Read', { file_path: join(alias, 'README.md') }));
+  // Retain both the hook cwd spelling and its resolved location for commands
+  // running outside the workspace. macOS TEMP normally exercises both forms.
+  denied(f.gate({ cwd: alias, hook_event_name: 'PreToolUse', tool_name: 'functions.exec_command',
+    tool_input: { cmd: `git -C ${alias} status`, workdir: f.outside } }));
 });
 
 test('projectless prompts do not receive setup guidance or tool blocks', (t) => {
@@ -141,7 +156,7 @@ test('setup writer is allowed only for exact commands and approved paths', (t) =
   for (const bad of [command + '; touch /tmp/unrelated', command + '\necho extra', command.replace('mastery=medium', 'mastery=expert'), command.replace('.three-axes.json', 'unrelated.json')]) {
     denied(f.tool('Bash', { command: bad }));
   }
-  const written = spawnSync(command, { shell: true, env: f.env, cwd: f.cwd, encoding: 'utf8' });
+  const written = executeSetup(command, f);
   assert.equal(written.status, 0, written.stderr);
   assert.deepEqual(JSON.parse(readFileSync(f.project)), { mastery: 'medium', consequence: 'medium', intent: 'balanced' });
   allowed(f.tool('Bash', { command: 'echo resumed' }));
@@ -215,13 +230,41 @@ test('global onboarding creates the selected baseline and reports its values', (
   const context = f.tool('apply_patch').output.hookSpecificOutput.permissionDecisionReason;
   const command = context.match(/^Global: (.+)$/m)[1].replace('mastery=medium', 'mastery=low').replace('intent=balanced', 'intent=growth');
   allowed(f.tool('Bash', { command }));
-  const written = spawnSync(command, { shell: true, env: f.env, cwd: f.cwd, encoding: 'utf8' });
+  const written = executeSetup(command, f);
   assert.ifError(written.error);
   assert.equal(written.status, 0, written.stderr);
   assert.match(written.stdout, /"intent":"growth"/);
   assert.deepEqual(JSON.parse(readFileSync(f.global)), { mastery: 'low', consequence: 'medium', intent: 'growth' });
   assert.equal(existsSync(f.project), false);
   allowed(f.tool('apply_patch'));
+});
+
+test('onboarding preserves quoted installation and profile paths in the declared shell', (t) => {
+  const parent = fixture(t);
+  const unusual = "plugin's ‘smart’ ‚low‛ $(Write-Output SUBSTITUTED) ` ; & [] %PCT% !bang! Ω";
+  const pluginRoot = join(parent.outside, unusual);
+  cpSync(join(ROOT, 'hooks'), join(pluginRoot, 'hooks'), { recursive: true });
+  const f = fixture(t, { pluginRoot, projectName: unusual.replace('plugin', 'project') });
+  const context = f.tool('functions.exec_command', { cmd: 'pwd' }).output.hookSpecificOutput.permissionDecisionReason;
+  const command = context.match(/^Project: (.+)$/m)[1];
+  allowed(f.tool('functions.exec_command', { cmd: command, shell: process.platform === 'win32' ? 'powershell.exe' : '/bin/sh' }));
+  const written = executeSetup(command, f);
+  assert.ifError(written.error);
+  assert.equal(written.status, 0, written.stderr);
+  if (process.platform === 'win32') assert.match(context, /PowerShell/);
+  assert.deepEqual(JSON.parse(readFileSync(f.project)), { mastery: 'medium', consequence: 'medium', intent: 'balanced' });
+  assert.equal(existsSync(f.global), false);
+  allowed(f.tool('apply_patch'));
+});
+
+test('PowerShell 7 executes the same literal onboarding command', { skip: process.platform !== 'win32' }, (t) => {
+  const f = fixture(t, { projectName: "project's $(Write-Output SUBSTITUTED) ` & [] Ω" });
+  const context = f.tool('functions.exec_command', { cmd: 'pwd' }).output.hookSpecificOutput.permissionDecisionReason;
+  const command = context.match(/^Project: (.+)$/m)[1];
+  const written = executeSetup(command, f, 'pwsh.exe');
+  assert.ifError(written.error);
+  assert.equal(written.status, 0, written.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(f.project)), { mastery: 'medium', consequence: 'medium', intent: 'balanced' });
 });
 
 test('hook registration includes prompt guidance and synchronous tool enforcement', () => {

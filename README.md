@@ -358,3 +358,7 @@ This redirects all SSH clone attempts to HTTPS. Useful for WSL, Docker, or CI en
 
 ## License
 MIT — free to use, fork, and adapt.
+
+Windows onboarding commands emitted by the profile gate require the native
+PowerShell tool; Bash/POSIX commands are emitted on Linux and macOS. Preserve
+the literal executable/path quoting and replace only the chosen axis values.
