@@ -1,5 +1,12 @@
 # Journal
 
+## 2026-10-26 - Prepare 1.7.2 stable invocation identity clarification
+
+- Clarified the existing three-axes-framework skill identity independently of installation display labels; native command, profile and hook code are unchanged.
+- Prepared manifest, README badge and changelog 1.7.2 under the existing three-axes-framework-v<version> tag scheme. Existing release workflow is reused.
+- User explicitly requested 1.7.2 publication. CI, protected-branch merge and signed tag/release verification remain pending; no old tag or asset is replaced.
+- Files: .claude-plugin/plugin.json; README.md; CHANGELOG.md; JOURNAL.md.
+
 ## 2026-10-25 - Publish 1.7.1 after verification
 
 - Merged documentation-only PR #6 at b00c72a6652de0b5db2745a1597c906d437d43a4.
