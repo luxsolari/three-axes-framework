@@ -1,5 +1,23 @@
 # Journal
 
+## 2026-10-25 - Prepare 1.7.1 verification-scope clarification
+
+- Clarified IR-08 so execution-check reports name the source revision/checkout
+  and relevant working-tree context; a committed-only review does not establish
+  the state a command ran against. Native profile/hook code is unchanged.
+- Prepared plugin manifest, README badge and changelog version 1.7.1 under the
+  established three-axes-framework-v<version> tag scheme. Publication remains
+  pending checks and release execution; no existing tag is replaced.
+- Verified 48 local Node profile/structure tests, exact 1.7.1 changelog extraction
+  and whitespace checks. Full setup-gate validation belongs to Ubuntu/Node 20 CI.
+- A Windows-local full-suite attempt exposed existing LF and POSIX-shell test
+  assumptions. Unmodified command files were materialized with their committed LF
+  form; no hook/runtime behavior was changed to accommodate that local test host.
+- Open: complete Ubuntu CI and final audit before merge/tag/publication.
+- Files: skills/three-axes-framework/SKILL.md, .claude-plugin/plugin.json,
+  README.md, CHANGELOG.md and JOURNAL.md.
+
+
 ## 2026-09-23 - GitHub Pages source aligned with design-system repositories
 
 - Moved the static showcase from `site/` to `docs/` on `main` so its publishing

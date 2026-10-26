@@ -1,7 +1,7 @@
 # Three Axes Framework
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.7.0-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.1-informational.svg)](CHANGELOG.md)
 
 [Website](https://luxsolari.github.io/three-axes-framework/) · [Source](https://github.com/luxsolari/three-axes-framework) · [Essay](https://luxsolari.is-a.dev/blog/the-three-axes-framework)
 
