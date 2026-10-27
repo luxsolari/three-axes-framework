@@ -1,5 +1,13 @@
 # Journal
 
+## 2026-10-26 — add revision-linked review illustration to section 7
+
+- User requested an accompanying section 7 asset using Image Direction, selected technical vector and then delegated color mode to the actual site. Inspected live themes, existing cream-background plates, canonical visual master and technical/editorial reference. Chose cream field/dark structure/red signal to match existing plates in either site theme; no theme token or extension changes.
+- Generated an original square raster illustration with built-in image generation: source commit nodes, saved review document, current-source sheets and changed-row signal with a broken comparison connector. No fabricated product UI, approval badge, human-understanding score or cloud claim. A targeted finish refinement reduced the red saturation; slight cream tonal variation remains, so this is a vector-style PNG rather than editable SVG or a perfectly uniform vector drawing. Originals/prompt retained outside Git.
+- Placed the graphic beside section 7 introduction, stacking below it at the existing 900px breakpoint. Added alt text, lazy loading, intrinsic dimensions and scoped height:auto after the first preview exposed a fixed-height distortion. Existing cards, comparison, pending Agensi CTA, product version and package remain unchanged.
+- Verified native Windows suite: 64/64 pass, no skips. Sandbox run failed Git fixture processes; native rerun passed without changing tests. One output redirection used a wrong relative directory and failed before running; corrected to the absolute evidence path. Desktop browser: asset loads at 1254 square, rendered square at 554.9px, no document overflow. Responsive CSS inspected; browser viewport capability acknowledged 360px requests but actual DOM stayed at 1920px, including a fresh tab. Reset override; do not claim new narrow-browser verification. Prior deployment notes preserved in named JOURNAL-only stash.
+- Pending: hosted CI, review/merge and production deployment. Files: docs/assets/revision-linked-review.png; docs/index.html; docs/styles.css; CHANGELOG.md; JOURNAL.md. No runtime, release-tag, marketplace ZIP, source-license or price edit.
+
 ## 2026-10-26 — compare free and Supporter on the demo site
 
 - User requested the edition comparison used on the Lux Swiss/Tri-Swiss demos. Added Editions navigation, two bordered cards, the approved open-source/coffee aside, and an accessible horizontally contained table. Preserved existing Geist typography, theme tokens, images, commands and other copy.
