@@ -1,5 +1,11 @@
 # Journal
 
+## 2026-10-27 — activate the approved Agensi purchase link
+
+- User requested delivery verification and purchase-link activation after approval. Authenticated Agensi reports live/approved at USD 9.99; public listing exposes the purchase action. Retrieved all 19 current files through the free creator-test flow and compared each complete text exactly against the immutable released 1.7.3 ZIP. All match, including manifest/provenance, licenses, runtime and skill. No customer purchase/payment flow claimed.
+- Replace the disabled edition action with the verified canonical Agensi URL and remove the under-review sentence. Preserve the comparison, illustration, complete free framework offer, native/text-delivery boundaries and evergreen pricing. Skill/root identifier remains three-axes-framework; Supporter appears in listing/display copy only. No new namespace, registered Agensi slash command, product version or package change.
+- Verified 64/64 native Windows framework tests and whitespace check. Reviewed the two HTML substitutions and changelog entry. Prior local deployment observations preserved in named journal-only stash. Pending: hosted exact-head CI, protected merge and Pages production readback. Files: docs/index.html; CHANGELOG.md; JOURNAL.md.
+
 ## 2026-10-26 — add revision-linked review illustration to section 7
 
 - User requested an accompanying section 7 asset using Image Direction, selected technical vector and then delegated color mode to the actual site. Inspected live themes, existing cream-background plates, canonical visual master and technical/editorial reference. Chose cream field/dark structure/red signal to match existing plates in either site theme; no theme token or extension changes.

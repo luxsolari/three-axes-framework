@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Activate the Supporter Edition purchase link after Agensi approval and verification of all delivered 1.7.3 files.
 - Add an accompanying technical illustration of a revision-linked review to the demo site's edition comparison.
 - Add a free/Supporter comparison to the demo site, keeping the complete MIT framework free and distinguishing native installation from Agensi text delivery. Show pending review honestly and retain optional coffee support.
 
