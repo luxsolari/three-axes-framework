@@ -1,5 +1,13 @@
 # Journal
 
+## 2026-10-26 — compare free and Supporter on the demo site
+
+- User requested the edition comparison used on the Lux Swiss/Tri-Swiss demos. Added Editions navigation, two bordered cards, the approved open-source/coffee aside, and an accessible horizontally contained table. Preserved existing Geist typography, theme tokens, images, commands and other copy.
+- Free retains the complete MIT framework/ownership guidance/native integrations. Supporter adds local revision-linked records, evidence and revisit workflow. Explicitly state Python/Git/process/storage requirements and the hook-free Agensi boundary; no comprehension certification or automatic test-rerun claim. No fixed price copied; marketplace remains price authority.
+- Agensi listing was submitted at the user-approved USD 9.99 but remains pending review. Its CTA is disabled and labelled in review; do not imply the pending product can be bought. Current package metadata correction is handled separately; no unreleased/private URL is published here.
+- Verified locally: all 64 existing framework tests passed on canonical Git bytes. The first fresh Windows checkout run failed nine LF-only frontmatter assertions due to CRLF; rematerialized unchanged Git blobs and normalized only the edited docs to canonical LF, without changing tests/runtime. At 1280 desktop the cards are equal width; at 360 mobile they stack, document width equals viewport client width and the table scroll is contained (305 client/544 scroll). Screenshots saved in the parent task output. Browser Dark Reader applies a local color filter; source house-mark variables are unchanged, and that extension was not modified.
+- Pending: hosted PR CI, merge and Pages production readback. No version/tag, native runtime, Supporter artifact, user profile or marketplace package changed. Files: docs/index.html; docs/styles.css; CHANGELOG.md; JOURNAL.md.
+
 ## 2026-10-26 — prepare authorized lockstep 1.7.3 release
 
 - User explicitly requested merging upstream PR 8 and publishing both editions as 1.7.3 before advancing the marketplace PRs. The fix-only commits since three-axes-framework-v1.7.2 derive a patch bump matching that requested version. Updated canonical manifest, README badge and changelog section in this same PR; retained native fixes and tests.
